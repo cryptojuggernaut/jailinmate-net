@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# Context snapshots (internal use)
+.context_metadata.json
+.context_snapshot.md
+context/
+
+# Don't ignore dist — Cloudflare Pages needs it

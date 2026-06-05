@@ -84,9 +84,12 @@ def page(title: str, desc: str, body: str, canonical: str = "") -> str:
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<meta name="google-site-verification" content="WzK04VtHcUWuo5mpnptZdpeX7_jm08JZYIpkF-QXgs4">
 {can}
 <style>{CSS}</style>
-<!-- Google AdSense placeholder -->
+<!-- Google Analytics (add GA4 measurement ID when approved) -->
+<!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script> -->
+<!-- Google AdSense placeholder (uncomment after approval) -->
 <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script> -->
 </head>
 <body>

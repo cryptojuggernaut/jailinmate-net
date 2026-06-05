@@ -162,13 +162,15 @@ h1{{color:#1a1a2e}}ul{{columns:2;list-style:none;padding:0}}li{{padding:4px 0}}a
 
 def run(counties: list, output_dir: Path, delay: float = 0.5):
     """Generate pages for the given county list."""
-    output_dir.mkdir(parents=True, exist_ok=True)
+    # Write county pages to a subdirectory so they don't clobber build_site.py output
+    county_dir = output_dir / "counties"
+    county_dir.mkdir(parents=True, exist_ok=True)
     built = []
     total = len(counties)
 
     for i, (county, state, state_abbr) in enumerate(counties, 1):
         filename = f"{county.lower().replace(' ', '-')}-county-{state.lower().replace(' ', '-')}-inmate-lookup.html"
-        out_path = output_dir / filename
+        out_path = county_dir / filename
 
         if out_path.exists():
             print(f"  [{i}/{total}] SKIP {county} County, {state} (exists)")
@@ -182,8 +184,8 @@ def run(counties: list, output_dir: Path, delay: float = 0.5):
         built.append((county, state, state_abbr))
         time.sleep(delay)  # Rate limit
 
-    build_index(built, output_dir)
-    print(f"\n✅ Generated {len(built)} pages → {output_dir}")
+    # Do NOT call build_index() — index.html is owned by build_site.py
+    print(f"\n✅ Generated {len(built)} county pages → {county_dir}")
     return built
 
 

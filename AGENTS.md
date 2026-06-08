@@ -42,13 +42,15 @@ Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/
 - Bail bond affiliate program
 - No database needed — pure static
 
-## What's Next (in order)
-1. Register domain on Namecheap → https://www.namecheap.com
-2. Set up Cloudflare Pages account
-3. Build page generator script (Python) — one HTML per county
-4. Submit sitemap to Google Search Console
-5. Apply for Google AdSense
-6. Apply for bail bond affiliate program
+## What's Left
+
+- [x] Submit sitemap.xml to Google Search Console
+- [ ] Set up keyword rank tracking in SCE SEO tab (target: "[County] inmate lookup")
+- [ ] Generate remaining ~2,940 county pages (queue `county_pages_gen` task in SCE)
+- [ ] Apply for Google AdSense (need 3+ months of content indexed first)
+- [ ] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
+- [ ] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
+- [ ] Push dist/ to GitHub repo and connect to Cloudflare Pages deploy hook
 
 ## Research Files
 - `SCE_platform_spec.md` — niche analysis and research

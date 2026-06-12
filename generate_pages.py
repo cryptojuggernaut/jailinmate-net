@@ -12,6 +12,11 @@ Usage:
 """
 import os, sys, json, time, argparse
 from pathlib import Path
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
 
 # Top 50 US counties by population for fast first batch
 SAMPLE_COUNTIES = [

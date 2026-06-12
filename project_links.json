@@ -1,8 +1,4 @@
-﻿{
-    "pages_dev":  "https://jailinmate-net.pages.dev",
-    "github":  "https://github.com/cryptojuggernaut/jailinmate-net",
-    "cloudflare_dash":  "https://dash.cloudflare.com/2c9101e451945be06d2fbbda28249257/pages/view/jailinmate-net",
-    "live_url":  "https://jailinmate.net",
-    "claude_chat":  "",
-    "notes":  "Inmate lookup AdSense site. 3177 pages live on Cloudflare Pages at jailinmate.net. Submit to Google Search Console next."
+{
+  "github": "https://github.com/test/repo",
+  "live_url": "https://example.com"
 }

@@ -1,6 +1,8 @@
-{
-  "claude_chat": "",
-  "github": "",
-  "live_url": "",
-  "notes": "Inmate lookup AdSense site. Research done. Waiting on domain (countyjails.com or jailroster.com). 3,000 county pages, static HTML, Cloudflare Pages hosting."
+﻿{
+    "pages_dev":  "https://jailinmate-net.pages.dev",
+    "github":  "https://github.com/cryptojuggernaut/jailinmate-net",
+    "cloudflare_dash":  "https://dash.cloudflare.com/2c9101e451945be06d2fbbda28249257/pages/view/jailinmate-net",
+    "live_url":  "https://jailinmate.net",
+    "claude_chat":  "",
+    "notes":  "Inmate lookup AdSense site. 3177 pages live on Cloudflare Pages at jailinmate.net. Submit to Google Search Console next."
 }

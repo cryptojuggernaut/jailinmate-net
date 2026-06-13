@@ -44,13 +44,13 @@ Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/
 
 ## What's Left
 
-- [x] Submit sitemap.xml to Google Search Console
-- [x] Set up keyword rank tracking in SCE SEO tab (target: "[County] inmate lookup")
-- [x] Generate remaining ~2,940 county pages (queue `county_pages_gen` task in SCE)
-- [x] Apply for Google AdSense (need 3+ months of content indexed first)
-- [x] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
-- [x] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
-- [x] Push dist/ to GitHub repo and connect to Cloudflare Pages deploy hook
+- [ ] Submit sitemap.xml to Google Search Console
+- [ ] Set up keyword rank tracking in SCE SEO tab (target: "[County] inmate lookup")
+- [ ] Generate remaining ~2,940 county pages (queue `county_pages_gen` task in SCE)
+- [ ] Apply for Google AdSense (need 3+ months of content indexed first)
+- [ ] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
+- [ ] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
+- [ ] Push dist/ to GitHub repo and connect to Cloudflare Pages deploy hook
 
 ## Research Files
 - `SCE_platform_spec.md` — niche analysis and research

@@ -9,6 +9,11 @@ Usage:
   python generate_pages.py              # Generate first 10 (test)
   python generate_pages.py --all        # Generate all 3,000
   python generate_pages.py --state TX   # Generate one state only
+
+Keyword integration:
+  Run keyword_agent.py first to populate keyword_data/keyword_map.json.
+  generate_pages.py reads that map and uses the researched keyword as the
+  primary keyword for title, H1, and Claude prompt.
 """
 import os, sys, json, time, argparse
 from pathlib import Path
@@ -17,6 +22,23 @@ try:
     load_dotenv(Path(__file__).parent / ".env")
 except ImportError:
     pass
+
+# Load keyword map produced by keyword_agent.py (optional — degrades gracefully)
+_KEYWORD_MAP_PATH = Path(__file__).parent / "keyword_data" / "keyword_map.json"
+_KEYWORD_MAP: dict = {}
+if _KEYWORD_MAP_PATH.exists():
+    try:
+        _KEYWORD_MAP = json.loads(_KEYWORD_MAP_PATH.read_text(encoding="utf-8"))
+        print(f"[keywords] Loaded {len(_KEYWORD_MAP)} researched keywords")
+    except Exception:
+        pass
+
+
+def get_primary_keyword(county: str, state: str, state_abbr: str) -> str:
+    """Return the researched primary keyword, or a sensible default."""
+    key = f"{county}|{state}"
+    return _KEYWORD_MAP.get(key, f"{county} County {state} Inmate Lookup")
+
 
 # Top 50 US counties by population for fast first batch
 SAMPLE_COUNTIES = [
@@ -47,8 +69,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{county} County {state} Inmate Lookup — Official Guide</title>
-<meta name="description" content="How to search {county} County {state} inmate records, jail roster, and court information. Official sources and step-by-step guide.">
+<title>{title} — Official Guide</title>
+<meta name="description" content="How to {title} — official sources, step-by-step guide, and bail bond information for {county} County, {state}.">
 <style>
   body {{ font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.6; }}
   h1 {{ color: #1a1a2e; border-bottom: 3px solid #e63946; padding-bottom: 10px; }}
@@ -73,22 +95,25 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </html>"""
 
 
-def generate_page_content(county: str, state: str, state_abbr: str) -> str:
+def generate_page_content(county: str, state: str, state_abbr: str,
+                          primary_keyword: str = None) -> str:
     """Generate the body content for a county page using Claude."""
+    if primary_keyword is None:
+        primary_keyword = get_primary_keyword(county, state, state_abbr)
     key = os.environ.get("ANTHROPIC_API_KEY", "")
     real_links = _get_real_links(county, state, state_abbr)
 
     if not key:
-        return _template_fallback(county, state, state_abbr, real_links)
+        return _template_fallback(county, state, state_abbr, real_links, primary_keyword)
 
     try:
         import anthropic
         client = anthropic.Anthropic(api_key=key)
-        prompt = f"""Write an informational HTML body (no html/head/body/doctype tags, NO markdown code fences) for people searching "{county} County {state} inmate lookup".
+        prompt = f"""Write an informational HTML body (no html/head/body/doctype tags, NO markdown code fences) for people searching "{primary_keyword}".
 
 Requirements:
-- H1: "{county} County {state} Inmate Lookup"
-- Intro paragraph specific to {county} County (2-3 sentences)
+- H1: "{primary_keyword}"
+- Intro paragraph specific to {county} County (2-3 sentences, naturally include the phrase "{primary_keyword.lower()}")
 - Section "How to Search {county} County Jail Records" with numbered steps
 - Section "Official {county} County Resources" with working links using these EXACT hrefs:
 {real_links['links_html']}
@@ -172,11 +197,15 @@ def _get_real_links(county: str, state: str, state_abbr: str) -> dict:
 
 
 
-def _template_fallback(county: str, state: str, state_abbr: str, real_links: dict = None) -> str:
+def _template_fallback(county: str, state: str, state_abbr: str,
+                       real_links: dict = None,
+                       primary_keyword: str = None) -> str:
     """Template-based fallback when AI is unavailable."""
     if real_links is None:
         real_links = _get_real_links(county, state, state_abbr)
-    return f"""<h1>{county} County {state} Inmate Lookup — Official Guide</h1>
+    if primary_keyword is None:
+        primary_keyword = get_primary_keyword(county, state, state_abbr)
+    return f"""<h1>{primary_keyword}</h1>
 <p>Looking for someone in {county} County, {state}? This guide explains how to search official {county} County jail records,
 view current inmates, and access court information for {county} County, {state}.</p>
 
@@ -254,8 +283,13 @@ def run(counties: list, output_dir: Path, delay: float = 0.5):
             continue
 
         print(f"  [{i}/{total}] Generating {county} County, {state}...")
-        body = generate_page_content(county, state, state_abbr)
-        html = HTML_TEMPLATE.format(county=county, state=state, state_abbr=state_abbr, body=body)
+        primary_keyword = get_primary_keyword(county, state, state_abbr)
+        body = generate_page_content(county, state, state_abbr, primary_keyword)
+        html = HTML_TEMPLATE.format(
+            county=county, state=state, state_abbr=state_abbr,
+            title=primary_keyword,
+            body=body
+        )
         out_path.write_text(html, encoding="utf-8")
         built.append((county, state, state_abbr))
         time.sleep(delay)  # Rate limit

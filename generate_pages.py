@@ -3,7 +3,7 @@ Inmate Lookup Site — County Page Generator
 projects/inmate-lookup-site/generate_pages.py
 
 Generates 3,000 static HTML pages (one per US county) using Claude.
-Deploys to: C:\WebAutomation\projects\inmate-lookup-site\dist\
+Deploys to: C:/WebAutomation/projects/inmate-lookup-site/dist/
 
 Usage:
   python generate_pages.py              # Generate first 10 (test)
@@ -20,6 +20,13 @@ from pathlib import Path
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass
+
+# Fix SSL certificate verification on Windows (Python 3.14 doesn't use system cert store)
+try:
+    import truststore
+    truststore.inject_into_ssl()
 except ImportError:
     pass
 
@@ -69,30 +76,109 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{title} — Official Guide</title>
-<meta name="description" content="How to {title} — official sources, step-by-step guide, and bail bond information for {county} County, {state}.">
+<title>{title}</title>
+<meta name="description" content="{description}">
+<link rel="canonical" href="https://jailinmate.net/{slug}">
+
+<!-- Open Graph (social sharing) -->
+<meta property="og:type" content="article">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{description}">
+<meta property="og:url" content="https://jailinmate.net/{slug}">
+<meta property="og:site_name" content="jailinmate.net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{description}">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{schema_json}
+</script>
+
+<!-- AdSense -->
+<meta name="google-adsense-account" content="ca-pub-1410717606678785">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1410717606678785" crossorigin="anonymous"></script>
+
 <style>
-  body {{ font-family: system-ui, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; line-height: 1.6; }}
-  h1 {{ color: #1a1a2e; border-bottom: 3px solid #e63946; padding-bottom: 10px; }}
-  h2 {{ color: #457b9d; margin-top: 30px; }}
-  .cta-box {{ background: #f1faee; border: 1px solid #a8dadc; padding: 16px; border-radius: 8px; margin: 20px 0; }}
-  .resource-list {{ list-style: none; padding: 0; }}
-  .resource-list li {{ padding: 8px 0; border-bottom: 1px solid #eee; }}
-  .resource-list a {{ color: #457b9d; }}
-  footer {{ margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; color: #666; font-size: 0.85em; }}
-  nav {{ background: #1a1a2e; padding: 10px 20px; margin: -20px -20px 20px; }}
-  nav a {{ color: white; text-decoration: none; font-weight: bold; }}
+  *{{box-sizing:border-box}}
+  body{{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;max-width:860px;margin:0 auto;padding:0 20px 40px;color:#1a1a2e;line-height:1.7;font-size:16px}}
+  h1{{color:#1a1a2e;border-bottom:3px solid #e63946;padding-bottom:12px;font-size:1.9em;margin-top:28px}}
+  h2{{color:#1d3557;margin-top:36px;font-size:1.25em;border-left:4px solid #457b9d;padding-left:10px}}
+  h3{{color:#457b9d;margin-top:20px;font-size:1.05em}}
+  a{{color:#457b9d}}a:hover{{color:#1d3557}}
+  ol,ul{{padding-left:22px}}
+  li{{margin-bottom:6px}}
+  .cta-box{{background:#f1faee;border:1px solid #a8dadc;padding:18px 20px;border-radius:8px;margin:24px 0}}
+  .resource-list{{list-style:none;padding:0}}
+  .resource-list li{{padding:9px 0;border-bottom:1px solid #eee}}
+  .resource-list a{{color:#457b9d;font-weight:500}}
+  .disclaimer{{background:#fff8e7;border:1px solid #f4d03f;padding:14px;border-radius:6px;font-size:0.88em;color:#7d6608;margin-top:32px}}
+  footer{{margin-top:40px;padding-top:20px;border-top:1px solid #eee;color:#666;font-size:0.85em}}
+  footer a{{color:#666}}
+  nav{{background:#1a1a2e;padding:12px 20px;margin:0 -20px 24px;display:flex;gap:20px}}
+  nav a{{color:white;text-decoration:none;font-weight:600;font-size:14px}}
+  .breadcrumb{{font-size:13px;color:#888;margin-bottom:8px}}
+  .breadcrumb a{{color:#888}}
+  @media(max-width:600px){{h1{{font-size:1.4em}}h2{{font-size:1.1em}}}}
 </style>
 </head>
 <body>
-<nav><a href="/">🏛️ jailinmate.net</a></nav>
+<nav>
+  <a href="/">🏛️ jailinmate.net</a>
+  <a href="/states.html">All States</a>
+  <a href="/about.html">About</a>
+</nav>
+<div class="breadcrumb"><a href="/">Home</a> › <a href="/states/{state_abbr_lower}.html">{state}</a> › {county} County</div>
 {body}
+<div class="disclaimer">
+  <strong>Disclaimer:</strong> jailinmate.net is an informational resource that links to official government websites.
+  We are not affiliated with any law enforcement agency, court, or government body.
+  All inmate search links go directly to official sheriff offices or government databases.
+  We do not store, sell, or distribute personal information.
+</div>
 <footer>
-  <p>This is an informational guide page. We link to official government sources only. We are not affiliated with any government agency.</p>
-  <p><a href="/">Home</a> | <a href="/states.html">All States</a></p>
+  <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/states/{state_abbr_lower}.html">{state} Counties</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a></p>
+  <p style="margin-top:8px">© 2025 jailinmate.net — Links to official government sources only.</p>
 </footer>
 </body>
 </html>"""
+
+
+def _validate_body(content: str, county: str, real_links: dict) -> list[str]:
+    """
+    Return a list of quality issues found in AI-generated body HTML.
+    Empty list = page is good to write. Non-empty = fall back to template.
+
+    Rules enforced here match the site blueprint v2 quality standards.
+    """
+    issues = []
+    # Must contain actual HTML tags
+    if "<h1" not in content and "<p" not in content:
+        issues.append("no HTML tags found (likely markdown output)")
+    # Must not contain markdown fences
+    if "```" in content:
+        issues.append("contains markdown code fences")
+    # Must not contain dead links
+    if 'href="#"' in content:
+        issues.append("contains dead href='#' links")
+    # Must have an H1
+    if "<h1" not in content.lower():
+        issues.append("missing <h1>")
+    # Must have at least 4 of the 7 required H2 sections (partial match is OK)
+    required_h2s = ["How to Search", "Official", "Bail Bond", "Visitation", "What to Expect", "How to Contact", "Frequently Asked"]
+    found = sum(1 for h in required_h2s if h.lower() in content.lower())
+    if found < 4:
+        issues.append(f"only {found}/7 required H2 sections found")
+    # Must contain at least one real external link (http)
+    if "http" not in content:
+        issues.append("no external links found")
+    # Must not be too short (template fallback is ~1800 chars; AI should exceed that)
+    if len(content) < 1200:
+        issues.append(f"content too short ({len(content)} chars)")
+    # Must not start with a code fence leftover
+    if content.lstrip().startswith("html"):
+        issues.append("starts with 'html' (markdown fence artifact)")
+    return issues
 
 
 def generate_page_content(county: str, state: str, state_abbr: str,
@@ -111,25 +197,46 @@ def generate_page_content(county: str, state: str, state_abbr: str,
         client = anthropic.Anthropic(api_key=key)
         prompt = f"""Write an informational HTML body (no html/head/body/doctype tags, NO markdown code fences) for people searching "{primary_keyword}".
 
-Requirements:
-- H1: "{primary_keyword}"
-- Intro paragraph specific to {county} County (2-3 sentences, naturally include the phrase "{primary_keyword.lower()}")
-- Section "How to Search {county} County Jail Records" with numbered steps
-- Section "Official {county} County Resources" with working links using these EXACT hrefs:
+REQUIRED STRUCTURE — use exactly these 7 H2 headings in this order:
+1. <h2>How to Search {county} County Jail Records</h2> — numbered steps (ol)
+2. <h2>Official {county} County Resources</h2> — use EXACTLY these links:
 {real_links['links_html']}
-- Section "Bail Information for {county} County {state}" (1 paragraph, mention 10% bondsman fee)
-- FAQ section with 3 realistic questions and answers
-- Total: 400-500 words
-- IMPORTANT: Use only clean semantic HTML (h2, p, ul, ol, div). NO href="#". NO markdown. NO code blocks."""
+3. <h2>Bail Bond Information for {county} County</h2> — 2 paragraphs, mention 10% bondsman fee, arraignment timeline
+4. <h2>Visitation Rules at {county} County Jail</h2> — ul with ID, hours, dress code, video visits, children policy
+5. <h2>What to Expect After Arrest in {county} County</h2> — numbered steps: booking, medical, classification, arraignment, transfer
+6. <h2>How to Contact {county} County Jail</h2> — paragraph + ul with the 3 official links above
+7. <h2>Frequently Asked Questions — {county} County Inmate Lookup</h2> — exactly 5 <h3> questions with <p> answers:
+   - How do I find out if someone is in {county} County jail?
+   - How long does booking take in {county} County?
+   - Can I visit an inmate at {county} County jail?
+   - What if the person is not in the county jail system?
+   - How do I send money to an inmate in {county} County?
+
+RULES:
+- H1: "{primary_keyword}"
+- Intro paragraph: 2-3 sentences, naturally include "{primary_keyword.lower()}"
+- Total: 800-900 words (each section needs enough detail to be useful)
+- Use only semantic HTML (h1, h2, h3, p, ul, ol, li, strong, a). NO href="#". NO markdown. NO code blocks.
+- Link text must be descriptive (no "click here")"""
 
         resp = client.messages.create(
             model="claude-haiku-4-5",
-            max_tokens=1200,
+            max_tokens=1600,
             messages=[{"role": "user", "content": prompt}]
         )
         content = resp.content[0].text.strip()
         # Strip any markdown code fences Claude accidentally adds
-        content = content.removeprefix("```html").removeprefix("```").removesuffix("```").strip()
+        for fence in ("```html", "```"):
+            if content.startswith(fence):
+                content = content[len(fence):]
+            if content.endswith("```"):
+                content = content[:-3]
+        content = content.strip()
+        # Validate before returning — fall back to template if output is bad
+        issues = _validate_body(content, county, real_links)
+        if issues:
+            print(f"  AI output failed validation ({'; '.join(issues)}) — using template")
+            return _template_fallback(county, state, state_abbr, real_links, primary_keyword)
         return content
     except Exception as e:
         print(f"  AI failed ({e}), using template")
@@ -192,6 +299,8 @@ def _get_real_links(county: str, state: str, state_abbr: str) -> dict:
         "sheriff_search": sheriff_search,
         "doc_url": doc_url,
         "fbop": fbop,
+        "court_search": court_search,
+        "bond_search": bond_search,
         "links_html": links_html,
     }
 
@@ -206,16 +315,17 @@ def _template_fallback(county: str, state: str, state_abbr: str,
     if primary_keyword is None:
         primary_keyword = get_primary_keyword(county, state, state_abbr)
     return f"""<h1>{primary_keyword}</h1>
-<p>Looking for someone in {county} County, {state}? This guide explains how to search official {county} County jail records,
-view current inmates, and access court information for {county} County, {state}.</p>
+<p>Looking for someone in {county} County, {state}? This guide walks you through how to search
+official {county} County jail records, find current inmates, contact the facility, and understand
+the booking and bail process in {county} County, {state}.</p>
 
 <h2>How to Search {county} County Jail Records</h2>
 <ol>
   <li>Click the <a href="{real_links['sheriff_search']}">{county} County Sheriff's Office inmate search</a> link below</li>
-  <li>Enter the person's first and last name in the search fields</li>
-  <li>Review results — records typically show booking date, charges, and bond amount</li>
-  <li>Note the booking number for phone inquiries with the facility</li>
-  <li>Contact the jail directly if the person doesn't appear online yet — processing takes 2-8 hours</li>
+  <li>Enter the person's first and last name — try partial names if full name returns no results</li>
+  <li>Review results — records show booking date, charges, mugshot, and bond amount</li>
+  <li>Note the booking number if you need to contact the facility directly</li>
+  <li>Records update every 2–8 hours after booking; call the jail if the person doesn't appear yet</li>
 </ol>
 
 <h2>Official {county} County Resources</h2>
@@ -223,24 +333,67 @@ view current inmates, and access court information for {county} County, {state}.
 {real_links['links_html']}
 </ul>
 
-<div class="cta-box">
-  <strong>Need Help with Bail?</strong> Licensed bail bondsmen in {county} County can help secure release.
-  Standard bail bonds typically cost 10% of the total bail amount set by the court.
-</div>
+<h2>Bail Bond Information for {county} County</h2>
+<p>After a person is booked into {county} County jail, a judge sets a bail amount at the arraignment
+hearing — usually within 24–72 hours. To secure release before trial, most families work with a
+licensed bail bondsman. Standard bail bonds in {county} County cost <strong>10% of the total bail</strong>
+set by the court (non-refundable fee). For example, a $10,000 bail requires a $1,000 premium.</p>
+<p>If the person cannot afford bail, they may request a bail reduction hearing or apply for a
+public defender. Contact the <a href="{real_links['court_search']}">{county} County court</a> for
+hearing schedules.</p>
 
-<h2>Frequently Asked Questions</h2>
-<p><strong>How do I find out if someone is in {county} County jail?</strong><br>
-Use the <a href="{real_links['sheriff_search']}">official {county} County Sheriff's Office inmate search</a>, or call the jail directly. Records update every 2-8 hours after booking.</p>
+<h2>Visitation Rules at {county} County Jail</h2>
+<p>Visitation policies vary by facility. Before visiting someone at {county} County jail, confirm:</p>
+<ul>
+  <li><strong>Approved ID:</strong> Government-issued photo ID required for all visitors</li>
+  <li><strong>Visitation hours:</strong> Call the {county} County Sheriff's Office for current schedules</li>
+  <li><strong>Dress code:</strong> No clothing resembling inmate uniforms; some facilities restrict colors</li>
+  <li><strong>Video visitation:</strong> Many {county} County facilities offer remote video visits — ask when you call</li>
+  <li><strong>Children:</strong> Minors must be accompanied by an adult guardian</li>
+</ul>
 
-<p><strong>How long does booking take in {county} County?</strong><br>
-Booking typically takes 2-8 hours depending on the facility's current capacity. During weekends and holidays it may take longer before the record appears online.</p>
+<h2>What to Expect After Arrest in {county} County</h2>
+<p>When someone is arrested in {county} County, they go through a standard booking process:</p>
+<ol>
+  <li><strong>Booking</strong> — fingerprints, photo (mugshot), personal property inventory</li>
+  <li><strong>Medical screening</strong> — required by {state} law before placing in general population</li>
+  <li><strong>Classification</strong> — determines housing assignment based on charges and history</li>
+  <li><strong>Arraignment</strong> — first court appearance within 48–72 hours; bail is set here</li>
+  <li><strong>Transfer</strong> — serious charges may result in transfer to a state facility</li>
+</ol>
 
-<p><strong>Can I visit an inmate at {county} County jail?</strong><br>
-Yes. Contact the {county} County Sheriff's Office for current visitation hours, approved ID requirements, and dress code rules. Some facilities also offer video visitation.</p>
+<h2>How to Contact {county} County Jail</h2>
+<p>For questions about an inmate's status, bail, visitation, or medical needs, contact the
+{county} County Sheriff's Office directly. You can also search:</p>
+<ul>
+  <li><a href="{real_links['sheriff_search']}">{county} County Sheriff inmate search</a></li>
+  <li><a href="{real_links['doc_url']}">{state} Department of Corrections — state prison locator</a></li>
+  <li><a href="{real_links['fbop']}">Federal Bureau of Prisons — federal inmate locator</a></li>
+</ul>
 
-<p><strong>What if the person is in a state or federal facility?</strong><br>
-Use the <a href="{real_links['doc_url']}">{state} Department of Corrections inmate locator</a> for state prisons, or the
-<a href="{real_links['fbop']}">Federal Bureau of Prisons locator</a> for federal inmates.</p>"""
+<h2>Frequently Asked Questions — {county} County Inmate Lookup</h2>
+
+<h3>How do I find out if someone is in {county} County jail?</h3>
+<p>Use the <a href="{real_links['sheriff_search']}">official {county} County Sheriff's Office inmate search</a>,
+or call the jail directly. Records update every 2–8 hours after booking.</p>
+
+<h3>How long does booking take in {county} County?</h3>
+<p>Booking typically takes 2–8 hours depending on the facility's current volume. During weekends
+and holidays it may take longer before a record appears in the online search system.</p>
+
+<h3>Can I visit an inmate at {county} County jail?</h3>
+<p>Yes. Contact the {county} County Sheriff's Office for current visitation hours, approved ID
+requirements, and dress code rules. Many facilities now offer video visitation as an alternative.</p>
+
+<h3>What if the person is not in the county jail system?</h3>
+<p>They may have been transferred to a state facility — check the <a href="{real_links['doc_url']}">{state}
+Department of Corrections inmate locator</a>. For federal charges, use the
+<a href="{real_links['fbop']}">Federal Bureau of Prisons locator</a>.</p>
+
+<h3>How do I send money to an inmate in {county} County?</h3>
+<p>Most {county} County facilities use a third-party commissary service (such as JPay, Securus, or
+Access Corrections). Contact the jail directly to find out which service they use and any deposit limits.</p>"""
+
 
 
 
@@ -265,7 +418,7 @@ h1{{color:#1a1a2e}}ul{{columns:2;list-style:none;padding:0}}li{{padding:4px 0}}a
     (output_dir / "index.html").write_text(html, encoding="utf-8")
 
 
-def run(counties: list, output_dir: Path, delay: float = 0.5):
+def run(counties: list, output_dir: Path, delay: float = 0.5, force: bool = False):
     """Generate pages for the given county list."""
     # Write county pages to a subdirectory so they don't clobber build_site.py output
     county_dir = output_dir / "counties"
@@ -277,7 +430,7 @@ def run(counties: list, output_dir: Path, delay: float = 0.5):
         filename = f"{county.lower().replace(' ', '-')}-county-{state.lower().replace(' ', '-')}-inmate-lookup.html"
         out_path = county_dir / filename
 
-        if out_path.exists():
+        if out_path.exists() and not force:
             print(f"  [{i}/{total}] SKIP {county} County, {state} (exists)")
             built.append((county, state, state_abbr))
             continue
@@ -285,11 +438,68 @@ def run(counties: list, output_dir: Path, delay: float = 0.5):
         print(f"  [{i}/{total}] Generating {county} County, {state}...")
         primary_keyword = get_primary_keyword(county, state, state_abbr)
         body = generate_page_content(county, state, state_abbr, primary_keyword)
+
+        # ── Build all template variables ───────────────────────────────────────
+        slug = filename  # relative URL path
+        description = (f"How to do an inmate lookup in {county} County, {state} — "
+                       f"official sheriff search, bail bond info, visitation rules, "
+                       f"and step-by-step guide for {primary_keyword.lower()}.")
+        state_abbr_lower = state_abbr.lower()
+        real_links = _get_real_links(county, state, state_abbr)
+
+        # FAQ schema entries (mirror the 5 FAQ H3s in the body)
+        faq_items = [
+            {"q": f"How do I find out if someone is in {county} County jail?",
+             "a": f"Use the official {county} County Sheriff's Office inmate search or call the jail directly. Records update every 2-8 hours after booking."},
+            {"q": f"How long does booking take in {county} County?",
+             "a": "Booking typically takes 2-8 hours. During weekends and holidays it may take longer before a record appears in the online search system."},
+            {"q": f"Can I visit an inmate at {county} County jail?",
+             "a": f"Yes. Contact the {county} County Sheriff's Office for current visitation hours, approved ID requirements, and dress code rules."},
+            {"q": f"What if the person is not in the county jail system?",
+             "a": f"They may have been transferred to a state facility. Check the {state} Department of Corrections inmate locator. For federal charges, use the Federal Bureau of Prisons locator."},
+            {"q": f"How do I send money to an inmate in {county} County?",
+             "a": f"Most {county} County facilities use a third-party commissary service such as JPay, Securus, or Access Corrections. Contact the jail directly for the service they use."},
+        ]
+        import json as _json
+        schema = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {"@type": "Question", "name": item["q"],
+                         "acceptedAnswer": {"@type": "Answer", "text": item["a"]}}
+                        for item in faq_items
+                    ]
+                },
+                {
+                    "@type": "WebPage",
+                    "name": primary_keyword,
+                    "description": description,
+                    "url": f"https://jailinmate.net/{slug}",
+                    "publisher": {
+                        "@type": "Organization",
+                        "name": "jailinmate.net",
+                        "url": "https://jailinmate.net"
+                    }
+                }
+            ]
+        }
+        schema_json = _json.dumps(schema, indent=2)
+
         html = HTML_TEMPLATE.format(
             county=county, state=state, state_abbr=state_abbr,
+            state_abbr_lower=state_abbr_lower,
             title=primary_keyword,
+            description=description,
+            slug=slug,
+            schema_json=schema_json,
             body=body
         )
+        # Final guard: never write a page that is missing canonical or schema
+        if 'rel="canonical"' not in html or 'application/ld+json' not in html:
+            print(f"  SKIP {county},{state} — final HTML missing canonical or schema (template bug?)")
+            continue
         out_path.write_text(html, encoding="utf-8")
         built.append((county, state, state_abbr))
         time.sleep(delay)  # Rate limit
@@ -304,6 +514,7 @@ if __name__ == "__main__":
     parser.add_argument("--all", action="store_true", help="Generate all counties (requires CSV)")
     parser.add_argument("--state", help="Filter by state abbreviation (e.g. TX)")
     parser.add_argument("--count", type=int, default=10, help="Number of counties to generate")
+    parser.add_argument("--force", action="store_true", help="Overwrite existing pages (use after template changes)")
     args = parser.parse_args()
 
     out = Path(r"C:\WebAutomation\projects\inmate-lookup-site\dist")
@@ -324,4 +535,4 @@ if __name__ == "__main__":
         if args.state:
             counties = [c for c in SAMPLE_COUNTIES if c[2] == args.state]
 
-    run(counties, out)
+    run(counties, out, force=args.force)

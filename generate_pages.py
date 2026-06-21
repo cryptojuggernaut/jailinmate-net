@@ -524,7 +524,7 @@ if __name__ == "__main__":
         csv_path = Path(r"C:\WebAutomation\projects\inmate-lookup-site\counties.csv")
         if csv_path.exists():
             import csv
-            with open(csv_path) as f:
+            with open(csv_path, encoding="utf-8-sig") as f:
                 all_counties = [(r["county"], r["state"], r["state_abbr"]) for r in csv.DictReader(f)]
         else:
             print("No counties.csv found — using sample list")

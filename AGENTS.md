@@ -49,7 +49,7 @@ Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/
 - [ ] Generate remaining ~2,940 county pages (queue `county_pages_gen` task in SCE)
 - [ ] Apply for Google AdSense (need 3+ months of content indexed first)
 - [ ] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
-- [ ] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
+- [x] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
 - [ ] Push dist/ to GitHub repo and connect to Cloudflare Pages deploy hook
 
 ## Research Files

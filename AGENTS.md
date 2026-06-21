@@ -1,26 +1,21 @@
 # Inmate Lookup Site — AGENTS.md
-> Updated: 2026-06-04
+> Updated: 2026-06-21
 
 ## Domain
 **jailinmate.net** — registered on Cloudflare ✅
 
 ## Current Status
-- **Phase:** Site built ✅ — deploy to Cloudflare Pages next
-- **Domain:** `jailinmate.net` (registered, on Cloudflare nameservers)
-- **Built pages:** 57 (index, 50 state pages, about, privacy, contact, sitemap, robots.txt)
+- **Phase:** Live ✅ — 3,100 AI county pages deployed, sitemap submitted to GSC
+- **Domain:** `jailinmate.net` (live on Cloudflare Pages, clean URLs active)
+- **Built pages:** 3,158 total (3,100 county pages + state pages + core pages)
 - **Dist folder:** `C:\WebAutomation\projects\inmate-lookup-site\dist\`
-- **Next blocker:** Create GitHub repo → connect to Cloudflare Pages
+- **GitHub repo:** `cryptojuggernaut/jailinmate-net` (auto-deploys via Cloudflare Pages)
+- **Audit:** 3100/3100 county pages pass (audit_pages.py — all checks green)
 
 ## What This Project Is
 AdSense-monetized directory site targeting inmate/court records search traffic.
 Strategy: hyper-local guide pages (one per US county ~3,000 pages) linking to official sources.
 Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/lead).
-
-## Current Status
-- **Phase:** Research complete ✅ — waiting on domain registration
-- **Blocker:** No domain registered yet
-- **Recommended domains:** `countyjails.com` or `jailroster.com` (~$10–15 on Namecheap)
-- **Hosting:** Cloudflare Pages (free static hosting)
 
 ## Financial Projections
 | Month | Est. Monthly Revenue |
@@ -44,13 +39,14 @@ Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/
 
 ## What's Left
 
-- [ ] Submit sitemap.xml to Google Search Console
-- [ ] Set up keyword rank tracking in SCE SEO tab (target: "[County] inmate lookup")
-- [ ] Generate remaining ~2,940 county pages (queue `county_pages_gen` task in SCE)
-- [ ] Apply for Google AdSense (need 3+ months of content indexed first)
-- [ ] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
+- [x] Submit sitemap.xml to Google Search Console (done 2026-06-21, 3,152 pages discovered)
+- [x] Generate all 3,100 county pages with AI content (done 2026-06-21, 3100/3100 audit pass)
+- [x] Push dist/ to GitHub repo and connect to Cloudflare Pages (done 2026-06-21)
 - [x] Set monthly revenue goal in SCE Goals tab (target: $400/month by month 6)
-- [ ] Push dist/ to GitHub repo and connect to Cloudflare Pages deploy hook
+- [ ] Set up Google Indexing API to accelerate crawl (console.cloud.google.com)
+- [ ] Set up keyword rank tracking in SCE SEO tab (target: "[County] inmate lookup")
+- [ ] Apply for bail bond affiliate program (Afford Bail or Bad Boys Bail Bonds)
+- [ ] Apply for Google AdSense — eligible ~2026-09-21 (domain age gate ~3 months)
 
 ## Research Files
 - `SCE_platform_spec.md` — niche analysis and research

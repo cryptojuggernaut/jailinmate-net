@@ -75,8 +75,10 @@ FOOTER = """<footer>
 </div>
 </footer>"""
 
-def page(title: str, desc: str, body: str, canonical: str = "") -> str:
+def page(title: str, desc: str, body: str, canonical: str = "", schema_json: str = "") -> str:
     can = f'<link rel="canonical" href="https://jailinmate.net{canonical}">' if canonical else ""
+    og_url = f"https://jailinmate.net{canonical}" if canonical else "https://jailinmate.net"
+    schema_tag = f'<script type="application/ld+json">{schema_json}</script>' if schema_json else ""
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,6 +88,15 @@ def page(title: str, desc: str, body: str, canonical: str = "") -> str:
 <meta name="description" content="{desc}">
 <meta name="google-site-verification" content="WzK04VtHcUWuo5mpnptZdpeX7_jm08JZYIpkF-QXgs4">
 {can}
+<meta property="og:type" content="website">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{og_url}">
+<meta property="og:site_name" content="jailinmate.net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+{schema_tag}
 <style>{CSS}</style>
 <meta name="google-adsense-account" content="ca-pub-1410717606678785">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1410717606678785" crossorigin="anonymous"></script>
@@ -144,6 +155,57 @@ def build_homepage():
       <h2 class="section-title">Browse by State</h2>
       <div class="state-grid" id="state-grid">{state_cards}</div>
     </div>
+    <div style="margin-top:60px">
+      <h2 class="section-title">How to Find an Inmate in Any US County</h2>
+      <div class="content-card">
+        <p>Every county in the United States maintains a public jail roster — a live list of people currently in custody. These rosters are managed by the county sheriff's office and are updated continuously as people are booked, transferred, or released. jailinmate.net collects direct links to all 3,000+ of these official systems so you can reach the right source without searching through outdated or third-party sites.</p>
+        <ol style="padding-left:20px;margin-top:16px;color:var(--muted)">
+          <li style="margin-bottom:10px"><strong style="color:var(--text)">Select your state</strong> — Use the grid above or the search bar to find the state where the person was arrested.</li>
+          <li style="margin-bottom:10px"><strong style="color:var(--text)">Choose the county</strong> — Each state page lists all counties with a direct link to their inmate search tool.</li>
+          <li style="margin-bottom:10px"><strong style="color:var(--text)">Enter the person's name</strong> — Most systems search by first and last name. Try a partial name if the full name returns no results.</li>
+          <li style="margin-bottom:10px"><strong style="color:var(--text)">Review the record</strong> — Results typically show booking date, charges, bond amount, facility, and next court date.</li>
+          <li style="margin-bottom:10px"><strong style="color:var(--text)">Not found? Try state or federal</strong> — If the person isn't in the county system, they may have been transferred to a state prison or federal facility.</li>
+        </ol>
+      </div>
+    </div>
+    <div style="margin-top:40px">
+      <h2 class="section-title">What Information Is Available in County Jail Records</h2>
+      <div class="content-card">
+        <p>County jail records are public documents. What's included varies by county, but most official inmate search systems provide the following information:</p>
+        <div class="features" style="margin-top:16px">
+          <div class="feature"><h3>Booking Details</h3><p style="color:var(--muted)">Date and time of arrest, arresting agency, booking number, and the facility where the person is held.</p></div>
+          <div class="feature"><h3>Charges &amp; Bond</h3><p style="color:var(--muted)">Current charges, bond amount set by the court, and whether bond has been posted or denied.</p></div>
+          <div class="feature"><h3>Court Dates</h3><p style="color:var(--muted)">Scheduled arraignment, pre-trial hearings, and trial dates — useful for family members tracking a case.</p></div>
+          <div class="feature"><h3>Custody Status</h3><p style="color:var(--muted)">Whether the person is currently in custody, released on bond, transferred, or sentenced.</p></div>
+        </div>
+        <p style="margin-top:16px;color:var(--muted);font-size:14px">Note: jailinmate.net does not store or display inmate records directly. All links go to official government systems where the live data is maintained.</p>
+      </div>
+    </div>
+    <div style="margin-top:40px">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div class="content-card">
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;margin-bottom:6px">How current is the inmate information?</h3>
+          <p style="color:var(--muted)">County jail rosters update every 2–8 hours after booking. If someone was just arrested, their record may not appear for several hours. Call the facility directly for immediate confirmation.</p>
+        </div>
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;margin-bottom:6px">What if the person isn't showing up in the county system?</h3>
+          <p style="color:var(--muted)">They may have been transferred to a state prison or federal facility. Each county page includes links to the state Department of Corrections and the Federal Bureau of Prisons inmate locator.</p>
+        </div>
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;margin-bottom:6px">Is there a fee to search inmate records?</h3>
+          <p style="color:var(--muted)">No. All official county, state, and federal inmate search tools are free to the public. jailinmate.net is also completely free — we link directly to those government systems.</p>
+        </div>
+        <div style="margin-bottom:24px">
+          <h3 style="font-size:16px;margin-bottom:6px">What information do I need to search?</h3>
+          <p style="color:var(--muted)">Most systems only require a first and last name. A booking number (if you have it) returns results instantly. Knowing the county of arrest narrows the search significantly.</p>
+        </div>
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px">Are the links on this site official government sources?</h3>
+          <p style="color:var(--muted)">Yes. Every inmate search link on jailinmate.net goes to an official sheriff office, county jail, state Department of Corrections, or federal government website. We do not link to data brokers or third-party background check services.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 <script>
@@ -159,10 +221,57 @@ function doSearch() {{
 }}
 document.getElementById('county-search').addEventListener('keydown', e => {{ if(e.key==='Enter') doSearch(); }});
 </script>"""
+    import json as _json
+    schema = _json.dumps({
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "WebSite",
+                "name": "jailinmate.net",
+                "url": "https://jailinmate.net",
+                "description": "Free inmate lookup resource linking to official county jail records across all 3,000+ US counties.",
+                "potentialAction": {
+                    "@type": "SearchAction",
+                    "target": "https://jailinmate.net/states.html?q={search_term_string}",
+                    "query-input": "required name=search_term_string"
+                }
+            },
+            {
+                "@type": "FAQPage",
+                "mainEntity": [
+                    {
+                        "@type": "Question",
+                        "name": "How do I look up an inmate in any US county?",
+                        "acceptedAnswer": {"@type": "Answer", "text": "Select your state from the homepage, then choose the county. Each county page links directly to the official sheriff office inmate search tool or government database."}
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Is jailinmate.net free to use?",
+                        "acceptedAnswer": {"@type": "Answer", "text": "Yes. jailinmate.net is completely free. We link directly to official government websites — no account or payment is required."}
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "How current is the inmate information?",
+                        "acceptedAnswer": {"@type": "Answer", "text": "Inmate records are maintained by each county's sheriff office and typically update every 2–8 hours after booking. We link directly to those live systems, so the data is as current as the official source."}
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "What information do I need to search for an inmate?",
+                        "acceptedAnswer": {"@type": "Answer", "text": "Most county systems require only a first and last name. Having the county of arrest and approximate date of arrest makes the search faster. A booking number, if known, will return results instantly."}
+                    },
+                    {
+                        "@type": "Question",
+                        "name": "Are the links on jailinmate.net official government sources?",
+                        "acceptedAnswer": {"@type": "Answer", "text": "Yes. Every inmate search link on jailinmate.net goes to an official sheriff office, county jail, state department of corrections, or federal government website. We do not link to third-party data brokers."}
+                    }
+                ]
+            }
+        ]
+    })
     return page(
         "jailinmate.net — Search Any US County Jail Records",
         "Find official inmate records, jail rosters, and court information for all 3,000+ US counties. Links to official sheriff offices and government sources.",
-        body, "/"
+        body, "/", schema
     )
 
 def build_states_page():

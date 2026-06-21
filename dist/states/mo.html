@@ -7,6 +7,15 @@
 <meta name="description" content="Find inmate records for all 114 counties in Missouri. Official links to sheriff offices, jail rosters, and court records.">
 <meta name="google-site-verification" content="WzK04VtHcUWuo5mpnptZdpeX7_jm08JZYIpkF-QXgs4">
 <link rel="canonical" href="https://jailinmate.net/states/mo.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Missouri Jail Inmate Lookup — All 114 Counties">
+<meta property="og:description" content="Find inmate records for all 114 counties in Missouri. Official links to sheriff offices, jail rosters, and court records.">
+<meta property="og:url" content="https://jailinmate.net/states/mo.html">
+<meta property="og:site_name" content="jailinmate.net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Missouri Jail Inmate Lookup — All 114 Counties">
+<meta name="twitter:description" content="Find inmate records for all 114 counties in Missouri. Official links to sheriff offices, jail rosters, and court records.">
+
 <style>
 :root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3a;--text:#e8eaf0;--muted:#8b90a0;--accent:#4f7cff;--green:#22c55e;--red:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -19,13 +28,30 @@ nav{background:#111320;border-bottom:1px solid var(--border);padding:14px 0;posi
 .logo span{color:var(--accent)}
 .nav-links{display:flex;gap:24px;font-size:14px}
 .nav-links a{color:var(--muted)}
+.hero{background:linear-gradient(135deg,#0f1117 0%,#1a2040 100%);padding:80px 0 60px;text-align:center;border-bottom:1px solid var(--border)}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);font-size:18px;max-width:560px;margin:0 auto 32px}
+.search-box{display:flex;gap:0;max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.search-box input{flex:1;background:none;border:none;outline:none;padding:14px 18px;color:var(--text);font-size:16px}
+.search-box button{background:var(--accent);border:none;color:#fff;padding:14px 24px;cursor:pointer;font-size:15px;font-weight:600}
 .section{padding:60px 0}
 .section-title{font-size:24px;font-weight:700;margin-bottom:24px}
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.state-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .15s}
+.state-card:hover{border-color:var(--accent)}
+.state-card .state-name{font-weight:600;font-size:14px}
+.state-card .county-count{color:var(--muted);font-size:12px;margin-top:2px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px}
+.feature-icon{font-size:28px;margin-bottom:10px}
+.feature h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.feature p{color:var(--muted);font-size:14px}
 .breadcrumb{font-size:13px;color:var(--muted);padding:16px 0}
 .breadcrumb a{color:var(--muted)}
 .content-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:20px}
 .county-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block;color:var(--accent)}
+.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block}
 .county-link:hover{border-color:var(--accent);text-decoration:none}
 footer{background:#0a0c14;border-top:1px solid var(--border);padding:40px 0;color:var(--muted);font-size:13px;text-align:center}
 footer a{color:var(--muted)}
@@ -54,120 +80,26 @@ h1,h2{letter-spacing:-0.5px}
   <p style="color:var(--muted);margin-bottom:24px">Select a county to find official inmate search resources for Missouri.</p>
   <div class="content-card">
     <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">114 counties in Missouri</p>
-    <div class="county-grid"><a class="county-link" href="/counties/adair-county-missouri-inmate-lookup.html">📋 Adair County</a>
-<a class="county-link" href="/counties/andrew-county-missouri-inmate-lookup.html">📋 Andrew County</a>
-<a class="county-link" href="/counties/atchison-county-missouri-inmate-lookup.html">📋 Atchison County</a>
-<a class="county-link" href="/counties/audrain-county-missouri-inmate-lookup.html">📋 Audrain County</a>
-<a class="county-link" href="/counties/barry-county-missouri-inmate-lookup.html">📋 Barry County</a>
-<a class="county-link" href="/counties/barton-county-missouri-inmate-lookup.html">📋 Barton County</a>
-<a class="county-link" href="/counties/bates-county-missouri-inmate-lookup.html">📋 Bates County</a>
-<a class="county-link" href="/counties/benton-county-missouri-inmate-lookup.html">📋 Benton County</a>
-<a class="county-link" href="/counties/bollinger-county-missouri-inmate-lookup.html">📋 Bollinger County</a>
-<a class="county-link" href="/counties/boone-county-missouri-inmate-lookup.html">📋 Boone County</a>
-<a class="county-link" href="/counties/buchanan-county-missouri-inmate-lookup.html">📋 Buchanan County</a>
-<a class="county-link" href="/counties/butler-county-missouri-inmate-lookup.html">📋 Butler County</a>
-<a class="county-link" href="/counties/caldwell-county-missouri-inmate-lookup.html">📋 Caldwell County</a>
-<a class="county-link" href="/counties/callaway-county-missouri-inmate-lookup.html">📋 Callaway County</a>
-<a class="county-link" href="/counties/camden-county-missouri-inmate-lookup.html">📋 Camden County</a>
-<a class="county-link" href="/counties/cape-girardeau-county-missouri-inmate-lookup.html">📋 Cape Girardeau County</a>
-<a class="county-link" href="/counties/carroll-county-missouri-inmate-lookup.html">📋 Carroll County</a>
-<a class="county-link" href="/counties/carter-county-missouri-inmate-lookup.html">📋 Carter County</a>
-<a class="county-link" href="/counties/cass-county-missouri-inmate-lookup.html">📋 Cass County</a>
-<a class="county-link" href="/counties/cedar-county-missouri-inmate-lookup.html">📋 Cedar County</a>
-<a class="county-link" href="/counties/chariton-county-missouri-inmate-lookup.html">📋 Chariton County</a>
-<a class="county-link" href="/counties/christian-county-missouri-inmate-lookup.html">📋 Christian County</a>
-<a class="county-link" href="/counties/clark-county-missouri-inmate-lookup.html">📋 Clark County</a>
-<a class="county-link" href="/counties/clay-county-missouri-inmate-lookup.html">📋 Clay County</a>
-<a class="county-link" href="/counties/clinton-county-missouri-inmate-lookup.html">📋 Clinton County</a>
-<a class="county-link" href="/counties/cole-county-missouri-inmate-lookup.html">📋 Cole County</a>
-<a class="county-link" href="/counties/cooper-county-missouri-inmate-lookup.html">📋 Cooper County</a>
-<a class="county-link" href="/counties/crawford-county-missouri-inmate-lookup.html">📋 Crawford County</a>
-<a class="county-link" href="/counties/dade-county-missouri-inmate-lookup.html">📋 Dade County</a>
-<a class="county-link" href="/counties/dallas-county-missouri-inmate-lookup.html">📋 Dallas County</a>
-<a class="county-link" href="/counties/daviess-county-missouri-inmate-lookup.html">📋 Daviess County</a>
-<a class="county-link" href="/counties/dekalb-county-missouri-inmate-lookup.html">📋 Dekalb County</a>
-<a class="county-link" href="/counties/dent-county-missouri-inmate-lookup.html">📋 Dent County</a>
-<a class="county-link" href="/counties/douglas-county-missouri-inmate-lookup.html">📋 Douglas County</a>
-<a class="county-link" href="/counties/dunklin-county-missouri-inmate-lookup.html">📋 Dunklin County</a>
-<a class="county-link" href="/counties/franklin-county-missouri-inmate-lookup.html">📋 Franklin County</a>
-<a class="county-link" href="/counties/gasconade-county-missouri-inmate-lookup.html">📋 Gasconade County</a>
-<a class="county-link" href="/counties/gentry-county-missouri-inmate-lookup.html">📋 Gentry County</a>
-<a class="county-link" href="/counties/greene-county-missouri-inmate-lookup.html">📋 Greene County</a>
-<a class="county-link" href="/counties/grundy-county-missouri-inmate-lookup.html">📋 Grundy County</a>
-<a class="county-link" href="/counties/harrison-county-missouri-inmate-lookup.html">📋 Harrison County</a>
-<a class="county-link" href="/counties/henry-county-missouri-inmate-lookup.html">📋 Henry County</a>
-<a class="county-link" href="/counties/hickory-county-missouri-inmate-lookup.html">📋 Hickory County</a>
-<a class="county-link" href="/counties/holt-county-missouri-inmate-lookup.html">📋 Holt County</a>
-<a class="county-link" href="/counties/howard-county-missouri-inmate-lookup.html">📋 Howard County</a>
-<a class="county-link" href="/counties/howell-county-missouri-inmate-lookup.html">📋 Howell County</a>
-<a class="county-link" href="/counties/iron-county-missouri-inmate-lookup.html">📋 Iron County</a>
-<a class="county-link" href="/counties/jackson-county-missouri-inmate-lookup.html">📋 Jackson County</a>
-<a class="county-link" href="/counties/jasper-county-missouri-inmate-lookup.html">📋 Jasper County</a>
-<a class="county-link" href="/counties/jefferson-county-missouri-inmate-lookup.html">📋 Jefferson County</a>
-<a class="county-link" href="/counties/johnson-county-missouri-inmate-lookup.html">📋 Johnson County</a>
-<a class="county-link" href="/counties/knox-county-missouri-inmate-lookup.html">📋 Knox County</a>
-<a class="county-link" href="/counties/laclede-county-missouri-inmate-lookup.html">📋 Laclede County</a>
-<a class="county-link" href="/counties/lafayette-county-missouri-inmate-lookup.html">📋 Lafayette County</a>
-<a class="county-link" href="/counties/lawrence-county-missouri-inmate-lookup.html">📋 Lawrence County</a>
-<a class="county-link" href="/counties/lewis-county-missouri-inmate-lookup.html">📋 Lewis County</a>
-<a class="county-link" href="/counties/lincoln-county-missouri-inmate-lookup.html">📋 Lincoln County</a>
-<a class="county-link" href="/counties/linn-county-missouri-inmate-lookup.html">📋 Linn County</a>
-<a class="county-link" href="/counties/livingston-county-missouri-inmate-lookup.html">📋 Livingston County</a>
-<a class="county-link" href="/counties/macon-county-missouri-inmate-lookup.html">📋 Macon County</a>
-<a class="county-link" href="/counties/madison-county-missouri-inmate-lookup.html">📋 Madison County</a>
-<a class="county-link" href="/counties/maries-county-missouri-inmate-lookup.html">📋 Maries County</a>
-<a class="county-link" href="/counties/marion-county-missouri-inmate-lookup.html">📋 Marion County</a>
-<a class="county-link" href="/counties/mcdonald-county-missouri-inmate-lookup.html">📋 Mcdonald County</a>
-<a class="county-link" href="/counties/mercer-county-missouri-inmate-lookup.html">📋 Mercer County</a>
-<a class="county-link" href="/counties/miller-county-missouri-inmate-lookup.html">📋 Miller County</a>
-<a class="county-link" href="/counties/mississippi-county-missouri-inmate-lookup.html">📋 Mississippi County</a>
-<a class="county-link" href="/counties/moniteau-county-missouri-inmate-lookup.html">📋 Moniteau County</a>
-<a class="county-link" href="/counties/monroe-county-missouri-inmate-lookup.html">📋 Monroe County</a>
-<a class="county-link" href="/counties/montgomery-county-missouri-inmate-lookup.html">📋 Montgomery County</a>
-<a class="county-link" href="/counties/morgan-county-missouri-inmate-lookup.html">📋 Morgan County</a>
-<a class="county-link" href="/counties/new-madrid-county-missouri-inmate-lookup.html">📋 New Madrid County</a>
-<a class="county-link" href="/counties/newton-county-missouri-inmate-lookup.html">📋 Newton County</a>
-<a class="county-link" href="/counties/nodaway-county-missouri-inmate-lookup.html">📋 Nodaway County</a>
-<a class="county-link" href="/counties/oregon-county-missouri-inmate-lookup.html">📋 Oregon County</a>
-<a class="county-link" href="/counties/osage-county-missouri-inmate-lookup.html">📋 Osage County</a>
-<a class="county-link" href="/counties/ozark-county-missouri-inmate-lookup.html">📋 Ozark County</a>
-<a class="county-link" href="/counties/pemiscot-county-missouri-inmate-lookup.html">📋 Pemiscot County</a>
-<a class="county-link" href="/counties/perry-county-missouri-inmate-lookup.html">📋 Perry County</a>
-<a class="county-link" href="/counties/pettis-county-missouri-inmate-lookup.html">📋 Pettis County</a>
-<a class="county-link" href="/counties/phelps-county-missouri-inmate-lookup.html">📋 Phelps County</a>
-<a class="county-link" href="/counties/pike-county-missouri-inmate-lookup.html">📋 Pike County</a>
-<a class="county-link" href="/counties/platte-county-missouri-inmate-lookup.html">📋 Platte County</a>
-<a class="county-link" href="/counties/polk-county-missouri-inmate-lookup.html">📋 Polk County</a>
-<a class="county-link" href="/counties/pulaski-county-missouri-inmate-lookup.html">📋 Pulaski County</a>
-<a class="county-link" href="/counties/putnam-county-missouri-inmate-lookup.html">📋 Putnam County</a>
-<a class="county-link" href="/counties/ralls-county-missouri-inmate-lookup.html">📋 Ralls County</a>
-<a class="county-link" href="/counties/randolph-county-missouri-inmate-lookup.html">📋 Randolph County</a>
-<a class="county-link" href="/counties/ray-county-missouri-inmate-lookup.html">📋 Ray County</a>
-<a class="county-link" href="/counties/reynolds-county-missouri-inmate-lookup.html">📋 Reynolds County</a>
-<a class="county-link" href="/counties/ripley-county-missouri-inmate-lookup.html">📋 Ripley County</a>
-<a class="county-link" href="/counties/saline-county-missouri-inmate-lookup.html">📋 Saline County</a>
-<a class="county-link" href="/counties/schuyler-county-missouri-inmate-lookup.html">📋 Schuyler County</a>
-<a class="county-link" href="/counties/scotland-county-missouri-inmate-lookup.html">📋 Scotland County</a>
-<a class="county-link" href="/counties/scott-county-missouri-inmate-lookup.html">📋 Scott County</a>
-<a class="county-link" href="/counties/shannon-county-missouri-inmate-lookup.html">📋 Shannon County</a>
-<a class="county-link" href="/counties/shelby-county-missouri-inmate-lookup.html">📋 Shelby County</a>
-<a class="county-link" href="/counties/st.-charles-county-missouri-inmate-lookup.html">📋 St. Charles County</a>
-<a class="county-link" href="/counties/st.-clair-county-missouri-inmate-lookup.html">📋 St. Clair County</a>
-<a class="county-link" href="/counties/st.-francois-county-missouri-inmate-lookup.html">📋 St. Francois County</a>
-<a class="county-link" href="/counties/st.-louis-county-missouri-inmate-lookup.html">📋 St. Louis County</a>
-<a class="county-link" href="/counties/ste.-genevieve-county-missouri-inmate-lookup.html">📋 Ste. Genevieve County</a>
-<a class="county-link" href="/counties/stoddard-county-missouri-inmate-lookup.html">📋 Stoddard County</a>
-<a class="county-link" href="/counties/stone-county-missouri-inmate-lookup.html">📋 Stone County</a>
-<a class="county-link" href="/counties/sullivan-county-missouri-inmate-lookup.html">📋 Sullivan County</a>
-<a class="county-link" href="/counties/taney-county-missouri-inmate-lookup.html">📋 Taney County</a>
-<a class="county-link" href="/counties/texas-county-missouri-inmate-lookup.html">📋 Texas County</a>
-<a class="county-link" href="/counties/vernon-county-missouri-inmate-lookup.html">📋 Vernon County</a>
-<a class="county-link" href="/counties/warren-county-missouri-inmate-lookup.html">📋 Warren County</a>
-<a class="county-link" href="/counties/washington-county-missouri-inmate-lookup.html">📋 Washington County</a>
-<a class="county-link" href="/counties/wayne-county-missouri-inmate-lookup.html">📋 Wayne County</a>
-<a class="county-link" href="/counties/webster-county-missouri-inmate-lookup.html">📋 Webster County</a>
-<a class="county-link" href="/counties/worth-county-missouri-inmate-lookup.html">📋 Worth County</a>
-<a class="county-link" href="/counties/wright-county-missouri-inmate-lookup.html">📋 Wright County</a></div>
+    <div class="county-grid"><a class="county-link" href="/mo/county-1-county-inmate-lookup.html">📋 County 1 County</a>
+<a class="county-link" href="/mo/county-2-county-inmate-lookup.html">📋 County 2 County</a>
+<a class="county-link" href="/mo/county-3-county-inmate-lookup.html">📋 County 3 County</a>
+<a class="county-link" href="/mo/county-4-county-inmate-lookup.html">📋 County 4 County</a>
+<a class="county-link" href="/mo/county-5-county-inmate-lookup.html">📋 County 5 County</a>
+<a class="county-link" href="/mo/county-6-county-inmate-lookup.html">📋 County 6 County</a>
+<a class="county-link" href="/mo/county-7-county-inmate-lookup.html">📋 County 7 County</a>
+<a class="county-link" href="/mo/county-8-county-inmate-lookup.html">📋 County 8 County</a>
+<a class="county-link" href="/mo/county-9-county-inmate-lookup.html">📋 County 9 County</a>
+<a class="county-link" href="/mo/county-10-county-inmate-lookup.html">📋 County 10 County</a>
+<a class="county-link" href="/mo/county-11-county-inmate-lookup.html">📋 County 11 County</a>
+<a class="county-link" href="/mo/county-12-county-inmate-lookup.html">📋 County 12 County</a>
+<a class="county-link" href="/mo/county-13-county-inmate-lookup.html">📋 County 13 County</a>
+<a class="county-link" href="/mo/county-14-county-inmate-lookup.html">📋 County 14 County</a>
+<a class="county-link" href="/mo/county-15-county-inmate-lookup.html">📋 County 15 County</a>
+<a class="county-link" href="/mo/county-16-county-inmate-lookup.html">📋 County 16 County</a>
+<a class="county-link" href="/mo/county-17-county-inmate-lookup.html">📋 County 17 County</a>
+<a class="county-link" href="/mo/county-18-county-inmate-lookup.html">📋 County 18 County</a>
+<a class="county-link" href="/mo/county-19-county-inmate-lookup.html">📋 County 19 County</a>
+<a class="county-link" href="/mo/county-20-county-inmate-lookup.html">📋 County 20 County</a></div>
   </div>
   <div class="disclaimer">
     <strong>Disclaimer:</strong> This page links to official government resources only.
@@ -179,7 +111,7 @@ h1,h2{letter-spacing:-0.5px}
 <div class="container">
   <p style="margin-bottom:12px"><a href="/" style="font-weight:700;color:#fff">jailinmate.net</a></p>
   <p><a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="/contact.html">Contact</a></p>
-  <p style="margin-top:16px">© 2026 jailinmate.net — Informational resource linking to official government sources.</p>
+  <p style="margin-top:16px">© 2025 jailinmate.net — Informational resource linking to official government sources.</p>
   <p style="margin-top:8px">We do not store, sell, or distribute personal information. All links go to official government websites.</p>
 </div>
 </footer>

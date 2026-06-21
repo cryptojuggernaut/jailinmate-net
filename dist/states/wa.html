@@ -7,6 +7,15 @@
 <meta name="description" content="Find inmate records for all 39 counties in Washington. Official links to sheriff offices, jail rosters, and court records.">
 <meta name="google-site-verification" content="WzK04VtHcUWuo5mpnptZdpeX7_jm08JZYIpkF-QXgs4">
 <link rel="canonical" href="https://jailinmate.net/states/wa.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Washington Jail Inmate Lookup — All 39 Counties">
+<meta property="og:description" content="Find inmate records for all 39 counties in Washington. Official links to sheriff offices, jail rosters, and court records.">
+<meta property="og:url" content="https://jailinmate.net/states/wa.html">
+<meta property="og:site_name" content="jailinmate.net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Washington Jail Inmate Lookup — All 39 Counties">
+<meta name="twitter:description" content="Find inmate records for all 39 counties in Washington. Official links to sheriff offices, jail rosters, and court records.">
+
 <style>
 :root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3a;--text:#e8eaf0;--muted:#8b90a0;--accent:#4f7cff;--green:#22c55e;--red:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -19,13 +28,30 @@ nav{background:#111320;border-bottom:1px solid var(--border);padding:14px 0;posi
 .logo span{color:var(--accent)}
 .nav-links{display:flex;gap:24px;font-size:14px}
 .nav-links a{color:var(--muted)}
+.hero{background:linear-gradient(135deg,#0f1117 0%,#1a2040 100%);padding:80px 0 60px;text-align:center;border-bottom:1px solid var(--border)}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);font-size:18px;max-width:560px;margin:0 auto 32px}
+.search-box{display:flex;gap:0;max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.search-box input{flex:1;background:none;border:none;outline:none;padding:14px 18px;color:var(--text);font-size:16px}
+.search-box button{background:var(--accent);border:none;color:#fff;padding:14px 24px;cursor:pointer;font-size:15px;font-weight:600}
 .section{padding:60px 0}
 .section-title{font-size:24px;font-weight:700;margin-bottom:24px}
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.state-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .15s}
+.state-card:hover{border-color:var(--accent)}
+.state-card .state-name{font-weight:600;font-size:14px}
+.state-card .county-count{color:var(--muted);font-size:12px;margin-top:2px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px}
+.feature-icon{font-size:28px;margin-bottom:10px}
+.feature h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.feature p{color:var(--muted);font-size:14px}
 .breadcrumb{font-size:13px;color:var(--muted);padding:16px 0}
 .breadcrumb a{color:var(--muted)}
 .content-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:20px}
 .county-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block;color:var(--accent)}
+.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block}
 .county-link:hover{border-color:var(--accent);text-decoration:none}
 footer{background:#0a0c14;border-top:1px solid var(--border);padding:40px 0;color:var(--muted);font-size:13px;text-align:center}
 footer a{color:var(--muted)}
@@ -54,45 +80,26 @@ h1,h2{letter-spacing:-0.5px}
   <p style="color:var(--muted);margin-bottom:24px">Select a county to find official inmate search resources for Washington.</p>
   <div class="content-card">
     <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">39 counties in Washington</p>
-    <div class="county-grid"><a class="county-link" href="/counties/adams-county-washington-inmate-lookup.html">📋 Adams County</a>
-<a class="county-link" href="/counties/asotin-county-washington-inmate-lookup.html">📋 Asotin County</a>
-<a class="county-link" href="/counties/benton-county-washington-inmate-lookup.html">📋 Benton County</a>
-<a class="county-link" href="/counties/chelan-county-washington-inmate-lookup.html">📋 Chelan County</a>
-<a class="county-link" href="/counties/clallam-county-washington-inmate-lookup.html">📋 Clallam County</a>
-<a class="county-link" href="/counties/clark-county-washington-inmate-lookup.html">📋 Clark County</a>
-<a class="county-link" href="/counties/columbia-county-washington-inmate-lookup.html">📋 Columbia County</a>
-<a class="county-link" href="/counties/cowlitz-county-washington-inmate-lookup.html">📋 Cowlitz County</a>
-<a class="county-link" href="/counties/douglas-county-washington-inmate-lookup.html">📋 Douglas County</a>
-<a class="county-link" href="/counties/ferry-county-washington-inmate-lookup.html">📋 Ferry County</a>
-<a class="county-link" href="/counties/franklin-county-washington-inmate-lookup.html">📋 Franklin County</a>
-<a class="county-link" href="/counties/garfield-county-washington-inmate-lookup.html">📋 Garfield County</a>
-<a class="county-link" href="/counties/grant-county-washington-inmate-lookup.html">📋 Grant County</a>
-<a class="county-link" href="/counties/grays-harbor-county-washington-inmate-lookup.html">📋 Grays Harbor County</a>
-<a class="county-link" href="/counties/island-county-washington-inmate-lookup.html">📋 Island County</a>
-<a class="county-link" href="/counties/jefferson-county-washington-inmate-lookup.html">📋 Jefferson County</a>
-<a class="county-link" href="/counties/king-county-washington-inmate-lookup.html">📋 King County</a>
-<a class="county-link" href="/counties/kitsap-county-washington-inmate-lookup.html">📋 Kitsap County</a>
-<a class="county-link" href="/counties/kittitas-county-washington-inmate-lookup.html">📋 Kittitas County</a>
-<a class="county-link" href="/counties/klickitat-county-washington-inmate-lookup.html">📋 Klickitat County</a>
-<a class="county-link" href="/counties/lewis-county-washington-inmate-lookup.html">📋 Lewis County</a>
-<a class="county-link" href="/counties/lincoln-county-washington-inmate-lookup.html">📋 Lincoln County</a>
-<a class="county-link" href="/counties/mason-county-washington-inmate-lookup.html">📋 Mason County</a>
-<a class="county-link" href="/counties/okanogan-county-washington-inmate-lookup.html">📋 Okanogan County</a>
-<a class="county-link" href="/counties/pacific-county-washington-inmate-lookup.html">📋 Pacific County</a>
-<a class="county-link" href="/counties/pend-oreille-county-washington-inmate-lookup.html">📋 Pend Oreille County</a>
-<a class="county-link" href="/counties/pierce-county-washington-inmate-lookup.html">📋 Pierce County</a>
-<a class="county-link" href="/counties/san-juan-county-washington-inmate-lookup.html">📋 San Juan County</a>
-<a class="county-link" href="/counties/skagit-county-washington-inmate-lookup.html">📋 Skagit County</a>
-<a class="county-link" href="/counties/skamania-county-washington-inmate-lookup.html">📋 Skamania County</a>
-<a class="county-link" href="/counties/snohomish-county-washington-inmate-lookup.html">📋 Snohomish County</a>
-<a class="county-link" href="/counties/spokane-county-washington-inmate-lookup.html">📋 Spokane County</a>
-<a class="county-link" href="/counties/stevens-county-washington-inmate-lookup.html">📋 Stevens County</a>
-<a class="county-link" href="/counties/thurston-county-washington-inmate-lookup.html">📋 Thurston County</a>
-<a class="county-link" href="/counties/wahkiakum-county-washington-inmate-lookup.html">📋 Wahkiakum County</a>
-<a class="county-link" href="/counties/walla-walla-county-washington-inmate-lookup.html">📋 Walla Walla County</a>
-<a class="county-link" href="/counties/whatcom-county-washington-inmate-lookup.html">📋 Whatcom County</a>
-<a class="county-link" href="/counties/whitman-county-washington-inmate-lookup.html">📋 Whitman County</a>
-<a class="county-link" href="/counties/yakima-county-washington-inmate-lookup.html">📋 Yakima County</a></div>
+    <div class="county-grid"><a class="county-link" href="/wa/county-1-county-inmate-lookup.html">📋 County 1 County</a>
+<a class="county-link" href="/wa/county-2-county-inmate-lookup.html">📋 County 2 County</a>
+<a class="county-link" href="/wa/county-3-county-inmate-lookup.html">📋 County 3 County</a>
+<a class="county-link" href="/wa/county-4-county-inmate-lookup.html">📋 County 4 County</a>
+<a class="county-link" href="/wa/county-5-county-inmate-lookup.html">📋 County 5 County</a>
+<a class="county-link" href="/wa/county-6-county-inmate-lookup.html">📋 County 6 County</a>
+<a class="county-link" href="/wa/county-7-county-inmate-lookup.html">📋 County 7 County</a>
+<a class="county-link" href="/wa/county-8-county-inmate-lookup.html">📋 County 8 County</a>
+<a class="county-link" href="/wa/county-9-county-inmate-lookup.html">📋 County 9 County</a>
+<a class="county-link" href="/wa/county-10-county-inmate-lookup.html">📋 County 10 County</a>
+<a class="county-link" href="/wa/county-11-county-inmate-lookup.html">📋 County 11 County</a>
+<a class="county-link" href="/wa/county-12-county-inmate-lookup.html">📋 County 12 County</a>
+<a class="county-link" href="/wa/county-13-county-inmate-lookup.html">📋 County 13 County</a>
+<a class="county-link" href="/wa/county-14-county-inmate-lookup.html">📋 County 14 County</a>
+<a class="county-link" href="/wa/county-15-county-inmate-lookup.html">📋 County 15 County</a>
+<a class="county-link" href="/wa/county-16-county-inmate-lookup.html">📋 County 16 County</a>
+<a class="county-link" href="/wa/county-17-county-inmate-lookup.html">📋 County 17 County</a>
+<a class="county-link" href="/wa/county-18-county-inmate-lookup.html">📋 County 18 County</a>
+<a class="county-link" href="/wa/county-19-county-inmate-lookup.html">📋 County 19 County</a>
+<a class="county-link" href="/wa/county-20-county-inmate-lookup.html">📋 County 20 County</a></div>
   </div>
   <div class="disclaimer">
     <strong>Disclaimer:</strong> This page links to official government resources only.
@@ -104,7 +111,7 @@ h1,h2{letter-spacing:-0.5px}
 <div class="container">
   <p style="margin-bottom:12px"><a href="/" style="font-weight:700;color:#fff">jailinmate.net</a></p>
   <p><a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="/contact.html">Contact</a></p>
-  <p style="margin-top:16px">© 2026 jailinmate.net — Informational resource linking to official government sources.</p>
+  <p style="margin-top:16px">© 2025 jailinmate.net — Informational resource linking to official government sources.</p>
   <p style="margin-top:8px">We do not store, sell, or distribute personal information. All links go to official government websites.</p>
 </div>
 </footer>

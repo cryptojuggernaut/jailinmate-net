@@ -303,11 +303,9 @@ def build_states_page():
 
 def build_state_page(name: str, abbr: str, counties: int):
     """State index page linking to all county pages."""
-    # Generate sample county links for this state
-    # In production these would come from real county data
     county_names = _get_state_counties(name, abbr, counties)
     links = "\n".join(
-        f'<a class="county-link" href="/{abbr.lower()}/{c.lower().replace(" ","-")}-county-inmate-lookup.html">'
+        f'<a class="county-link" href="/counties/{c.lower().replace(" ","-")}-county-{name.lower().replace(" ","-")}-inmate-lookup.html">'
         f'📋 {c} County</a>'
         for c in county_names
     )
@@ -316,21 +314,63 @@ def build_state_page(name: str, abbr: str, counties: int):
 <div class="container">
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/states.html">States</a> › {name}</div>
   <h1 class="section-title">{name} Jail Inmate Lookup</h1>
-  <p style="color:var(--muted);margin-bottom:24px">Select a county to find official inmate search resources for {name}.</p>
+  <p style="color:var(--muted);margin-bottom:8px">{name} has {counties} counties, each with its own sheriff's office and county jail system. Select a county below to find the official inmate search tool, jail roster, bail information, and visitation rules for that facility.</p>
+
+  <h2 class="section-title" style="margin-top:36px">How to Search {name} County Jail Records</h2>
   <div class="content-card">
-    <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">{counties} counties in {name}</p>
+    <p>Inmate records in {name} are maintained at the county level by each sheriff's office. To find someone currently in a {name} county jail:</p>
+    <ol style="padding-left:20px;margin-top:12px;color:var(--muted)">
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Select the county</strong> where the arrest occurred from the directory below.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Use the official inmate search tool</strong> linked on the county page — enter the person's first and last name.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Check the {name} Department of Corrections</strong> if the person isn't in the county system — they may have been transferred to a state facility.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Try the Federal Bureau of Prisons</strong> locator at bop.gov if federal charges are involved.</li>
+    </ol>
+    <p style="margin-top:12px;color:var(--muted)">Records typically update every 2–8 hours after booking. If someone was recently arrested, try again after a few hours or call the county jail directly.</p>
+  </div>
+
+  <h2 class="section-title" style="margin-top:36px">All {counties} Counties in {name}</h2>
+  <div class="content-card">
+    <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">Click any county to find its official inmate search, bail information, and visitation rules.</p>
     <div class="county-grid">{links}</div>
   </div>
+
+  <h2 class="section-title" style="margin-top:36px">About {name} Inmate Records</h2>
+  <div class="content-card">
+    <p style="color:var(--muted)">In {name}, county jail records are public information maintained by each county sheriff's office under state public records law. These records include the person's name, booking date, charges, bond amount, and custody status. Mugshots may also be available depending on the county.</p>
+    <p style="margin-top:12px;color:var(--muted)">If the person has been convicted and sentenced to more than one year, they are typically transferred from county jail to a {name} state correctional facility managed by the {name} Department of Corrections. Use the state DOC inmate locator for sentenced individuals.</p>
+    <p style="margin-top:12px;color:var(--muted)">All inmate search tools linked on jailinmate.net go directly to official {name} government websites. We do not store, sell, or display inmate records.</p>
+  </div>
+
   <div class="disclaimer">
     <strong>Disclaimer:</strong> This page links to official government resources only.
     We are not affiliated with any government agency or law enforcement.
   </div>
 </div>
 </div>"""
+    import json as _json
+    schema = _json.dumps({
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://jailinmate.net/"},
+                    {"@type": "ListItem", "position": 2, "name": "All States", "item": "https://jailinmate.net/states.html"},
+                    {"@type": "ListItem", "position": 3, "name": f"{name} Inmate Lookup", "item": f"https://jailinmate.net/states/{abbr.lower()}.html"}
+                ]
+            },
+            {
+                "@type": "WebPage",
+                "name": f"{name} Jail Inmate Lookup — All {counties} Counties",
+                "description": f"Find inmate records for all {counties} counties in {name}. Official links to sheriff offices, jail rosters, and court records.",
+                "url": f"https://jailinmate.net/states/{abbr.lower()}.html"
+            }
+        ]
+    })
     return page(
         f"{name} Jail Inmate Lookup — All {counties} Counties",
         f"Find inmate records for all {counties} counties in {name}. Official links to sheriff offices, jail rosters, and court records.",
-        body, f"/states/{abbr.lower()}.html"
+        body, f"/states/{abbr.lower()}.html", schema
     )
 
 def _get_state_counties(state: str, abbr: str, count: int) -> list:

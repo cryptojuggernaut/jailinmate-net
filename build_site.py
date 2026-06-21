@@ -455,6 +455,11 @@ def build_sitemap(built_files: list) -> str:
             f"<url><loc>{base}/states.html</loc><priority>0.9</priority></url>"]
     for f in built_files:
         urls.append(f"<url><loc>{base}/{f}</loc><priority>0.7</priority></url>")
+    # Include all generated county pages
+    counties_dir = DIST / "counties"
+    if counties_dir.exists():
+        for html in sorted(counties_dir.glob("*.html")):
+            urls.append(f"<url><loc>{base}/counties/{html.name}</loc><priority>0.8</priority></url>")
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {''.join(urls)}

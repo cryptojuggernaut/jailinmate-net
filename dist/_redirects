@@ -1,0 +1,2 @@
+# Redirect www to non-www (fixes "Alternate page with proper canonical tag" in GSC)
+https://www.jailinmate.net/* https://jailinmate.net/:splat 301!

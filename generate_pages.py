@@ -30,6 +30,64 @@ try:
 except ImportError:
     pass
 
+# ── Site Launch Wizard: load approved blueprint from SCE DB ─────────────────
+def _load_blueprint_system_prompt(project: str = "inmate-lookup-site") -> str:
+    """
+    Read the approved blueprint from SCE's site_plans table and extract
+    the content rules for injection as Claude's system prompt.
+    Falls back to '' if the DB is unavailable or no approved plan exists.
+    Phase 5 of the Site Launch Wizard.
+    """
+    try:
+        import sqlite3
+        import re
+        db = Path(__file__).parents[2] / "sce" / "db" / "sce.db"
+        if not db.exists():
+            return ""
+        conn = sqlite3.connect(str(db))
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT blueprint_md FROM site_plans WHERE project=? AND status='approved' "
+            "ORDER BY version DESC LIMIT 1",
+            (project,)
+        )
+        row = cur.fetchone()
+        conn.close()
+        if not row or not row["blueprint_md"]:
+            return ""
+        bp = row["blueprint_md"]
+        # Extract the content rules sections: Page Template + Quality Rules
+        sections = []
+        for header in [
+            "## Page Template",
+            "## Quality Rules",
+            "## Schema Markup",
+            "## Validation Gate",
+        ]:
+            m = re.search(rf"{re.escape(header)}.*?(?=\n## |\Z)", bp, re.S)
+            if m:
+                sections.append(m.group(0).strip())
+        if not sections:
+            return ""
+        system = (
+            "You are a specialist HTML writer generating county inmate lookup pages. "
+            "Follow these approved blueprint rules exactly:\n\n"
+            + "\n\n".join(sections)
+        )
+        return system
+    except Exception as e:
+        print(f"[blueprint] Could not load from SCE DB: {e}")
+        return ""
+
+
+_BLUEPRINT_SYSTEM = _load_blueprint_system_prompt()
+if _BLUEPRINT_SYSTEM:
+    print(f"[blueprint] Loaded approved blueprint from SCE ({len(_BLUEPRINT_SYSTEM)} chars) — wizard rules active")
+else:
+    print("[blueprint] No approved blueprint found — using hardcoded rules")
+
+
 # Load keyword map produced by keyword_agent.py (optional — degrades gracefully)
 _KEYWORD_MAP_PATH = Path(__file__).parent / "keyword_data" / "keyword_map.json"
 _KEYWORD_MAP: dict = {}
@@ -167,7 +225,7 @@ def _validate_body(content: str, county: str, real_links: dict) -> list[str]:
     # Must have at least 4 of the 7 required H2 sections (partial match is OK)
     required_h2s = ["How to Search", "Official", "Bail Bond", "Visitation", "What to Expect", "How to Contact", "Frequently Asked"]
     found = sum(1 for h in required_h2s if h.lower() in content.lower())
-    if found < 4:
+    if found < 6:  # require at least 6/7 — fall back to template if 2+ sections missing
         issues.append(f"only {found}/7 required H2 sections found")
     # Must contain at least one real external link (http)
     if "http" not in content:
@@ -219,11 +277,14 @@ RULES:
 - Use only semantic HTML (h1, h2, h3, p, ul, ol, li, strong, a). NO href="#". NO markdown. NO code blocks.
 - Link text must be descriptive (no "click here")"""
 
-        resp = client.messages.create(
+        api_kwargs = dict(
             model="claude-haiku-4-5",
-            max_tokens=1600,
+            max_tokens=2500,
             messages=[{"role": "user", "content": prompt}]
         )
+        if _BLUEPRINT_SYSTEM:
+            api_kwargs["system"] = _BLUEPRINT_SYSTEM
+        resp = client.messages.create(**api_kwargs)
         content = resp.content[0].text.strip()
         # Strip any markdown code fences Claude accidentally adds
         for fence in ("```html", "```"):

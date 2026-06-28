@@ -195,7 +195,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
   We do not store, sell, or distribute personal information.
 </div>
 <footer>
-  <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/states/{state_abbr_lower}.html">{state} Counties</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a></p>
+  <p><a href="/">Home</a> &nbsp;·&nbsp; <a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/states/{state_abbr_lower}.html">{state} Counties</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a></p>
   <p style="margin-top:8px">© 2025 jailinmate.net — Links to official government sources only.</p>
 </footer>
 </body>
@@ -543,6 +543,14 @@ def run(counties: list, output_dir: Path, delay: float = 0.5, force: bool = Fals
                         "name": "jailinmate.net",
                         "url": "https://jailinmate.net"
                     }
+                },
+                {
+                    "@type": "BreadcrumbList",
+                    "itemListElement": [
+                        {"@type": "ListItem", "position": 1, "name": "Home", "item": "https://jailinmate.net/"},
+                        {"@type": "ListItem", "position": 2, "name": state, "item": f"https://jailinmate.net/states/{state_abbr_lower}.html"},
+                        {"@type": "ListItem", "position": 3, "name": f"{county} County", "item": f"https://jailinmate.net/{slug}"}
+                    ]
                 }
             ]
         }

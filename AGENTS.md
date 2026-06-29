@@ -1,5 +1,24 @@
 # Inmate Lookup Site — AGENTS.md
-> Updated: 2026-06-21
+> Updated: 2026-06-29
+
+## ⛔ CRITICAL BLOCK — AdSense (READ FIRST)
+
+**AdSense was REJECTED on 2026-06-29 for "low value content / thin content."**
+**Shane says: DO NOT attempt to set up AdSense, ads, or monetization until he explicitly says so.**
+
+CEO — do NOT queue tasks mentioning: adsense, monetize, ad_setup, revenue milestones, ad units.
+Full rejection analysis + fix plan: `projects/inmate-lookup-site/ADSENSE_REJECTION.md`
+
+### Why it was rejected
+The county pages are 95% identical template. Every "official" link is a `google.com/search?q=...`
+URL — not a real `.gov` sheriff website. Google flagged this as thin/doorway pages.
+
+### What to queue instead (content quality fixes):
+1. **research** — Find real sheriff office URLs for top 20 US counties (see ADSENSE_REJECTION.md)
+2. **web_dev** — Update `generate_pages.py` to use real URLs + county-specific address/phone data
+3. **web_dev** — Regenerate + redeploy top 20 county pages with improved content
+
+---
 
 ## Domain
 **jailinmate.net** — registered on Cloudflare ✅

@@ -1,4 +1,4 @@
-"""
+﻿"""
 keyword_agent.py — Self-Learning Keyword Research Agent for jailinmate.net
 C:\\WebAutomation\\projects\\inmate-lookup-site\\keyword_agent.py
 
@@ -438,7 +438,7 @@ def run_rank_checks(limit: int = 50):
             """, (rank, now, json.dumps(history), now, row["id"]))
 
             rank_str = f"#{rank}" if rank else "not found"
-            print(f"  {row['county']}, {row['state']}: \"{row['keyword']}\" → {rank_str}")
+            print(f"  {row['county']}, {row['state']}: \"{row['keyword']}\" -> {rank_str}")
             time.sleep(2.0)  # polite delay between requests
 
         conn.commit()
@@ -499,7 +499,7 @@ def reoptimise_pages(rank_threshold: int = 30, dry_run: bool = False):
                 continue
 
             new_keyword = PATTERNS[candidate_pattern_id].format(c=county, s=state)
-            print(f"  {county}, {state}: rank #{row['rank']} → trying \"{new_keyword}\"")
+            print(f"  {county}, {state}: rank #{row['rank']} -> trying \"{new_keyword}\"")
 
             if not dry_run:
                 # Deselect old, insert/select new
@@ -555,7 +555,7 @@ def _rewrite_page(county: str, state: str, state_abbr: str, new_keyword: str):
     )
 
     page_path.write_text(html, encoding="utf-8")
-    print(f"    [rewrite] ✓ {slug}")
+    print(f"    [rewrite] OK {slug}")
 
 
 # ── Reporting ─────────────────────────────────────────────────────────────────

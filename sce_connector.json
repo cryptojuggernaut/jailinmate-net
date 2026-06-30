@@ -1,0 +1,8 @@
+{
+  "name": "inmate-lookup-site",
+  "task_types": ["rebuild_inmate_site", "audit_inmate_pages", "build_county_pages"],
+  "entry_py": "build_site.py",
+  "description": "Inmate lookup site — generate all county pages, rebuild HTML, run audits. 3,000+ county pages for jailinmate.net",
+  "env_required": [],
+  "timeout": 600
+}

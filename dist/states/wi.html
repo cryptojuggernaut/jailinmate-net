@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Wisconsin Jail Inmate Lookup — All 72 Counties">
-  <meta property="og:description" content="Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.">
-  <meta property="og:url" content="https://jailinmate.net/states/wi.html">
-  <meta property="og:site_name" content="jailinmate.net">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Wisconsin Jail Inmate Lookup — All 72 Counties">
-  <meta name="twitter:description" content="Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.">
 <title>Wisconsin Jail Inmate Lookup — All 72 Counties</title>
 <meta name="description" content="Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.">
 <meta name="google-site-verification" content="WzK04VtHcUWuo5mpnptZdpeX7_jm08JZYIpkF-QXgs4">
 <link rel="canonical" href="https://jailinmate.net/states/wi.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Wisconsin Jail Inmate Lookup — All 72 Counties">
+<meta property="og:description" content="Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.">
+<meta property="og:url" content="https://jailinmate.net/states/wi.html">
+<meta property="og:site_name" content="jailinmate.net">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Wisconsin Jail Inmate Lookup — All 72 Counties">
+<meta name="twitter:description" content="Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://jailinmate.net/"}, {"@type": "ListItem", "position": 2, "name": "All States", "item": "https://jailinmate.net/states.html"}, {"@type": "ListItem", "position": 3, "name": "Wisconsin Inmate Lookup", "item": "https://jailinmate.net/states/wi.html"}]}, {"@type": "WebPage", "name": "Wisconsin Jail Inmate Lookup \u2014 All 72 Counties", "description": "Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.", "url": "https://jailinmate.net/states/wi.html"}]}</script>
 <style>
 :root{--bg:#0f1117;--card:#1a1d27;--border:#2a2d3a;--text:#e8eaf0;--muted:#8b90a0;--accent:#4f7cff;--green:#22c55e;--red:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -28,13 +28,30 @@ nav{background:#111320;border-bottom:1px solid var(--border);padding:14px 0;posi
 .logo span{color:var(--accent)}
 .nav-links{display:flex;gap:24px;font-size:14px}
 .nav-links a{color:var(--muted)}
+.hero{background:linear-gradient(135deg,#0f1117 0%,#1a2040 100%);padding:80px 0 60px;text-align:center;border-bottom:1px solid var(--border)}
+.hero h1{font-size:clamp(28px,5vw,52px);font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);font-size:18px;max-width:560px;margin:0 auto 32px}
+.search-box{display:flex;gap:0;max-width:520px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.search-box input{flex:1;background:none;border:none;outline:none;padding:14px 18px;color:var(--text);font-size:16px}
+.search-box button{background:var(--accent);border:none;color:#fff;padding:14px 24px;cursor:pointer;font-size:15px;font-weight:600}
 .section{padding:60px 0}
 .section-title{font-size:24px;font-weight:700;margin-bottom:24px}
+.state-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.state-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;transition:border-color .15s}
+.state-card:hover{border-color:var(--accent)}
+.state-card .state-name{font-weight:600;font-size:14px}
+.state-card .county-count{color:var(--muted);font-size:12px;margin-top:2px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:20px}
+.feature{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:24px}
+.feature-icon{font-size:28px;margin-bottom:10px}
+.feature h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.feature p{color:var(--muted);font-size:14px}
 .breadcrumb{font-size:13px;color:var(--muted);padding:16px 0}
 .breadcrumb a{color:var(--muted)}
 .content-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:28px;margin-bottom:20px}
 .county-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block;color:var(--accent)}
+.county-link{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:12px 15px;font-size:14px;transition:border-color .15s;display:block}
 .county-link:hover{border-color:var(--accent);text-decoration:none}
 footer{background:#0a0c14;border-top:1px solid var(--border);padding:40px 0;color:var(--muted);font-size:13px;text-align:center}
 footer a{color:var(--muted)}
@@ -43,17 +60,6 @@ h1,h2{letter-spacing:-0.5px}
 </style>
 <meta name="google-adsense-account" content="ca-pub-1410717606678785">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1410717606678785" crossorigin="anonymous"></script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Wisconsin Jail Inmate Lookup — All 72 Counties",
-    "description": "Find inmate records for all 72 counties in Wisconsin. Official links to sheriff offices, jail rosters, and court records.",
-    "url": "https://jailinmate.net/states/wi.html",
-    "isPartOf": {"@type": "WebSite", "name": "jailinmate.net", "url": "https://jailinmate.net"}
-  }
-  </script>
 </head>
 <body>
 <nav>
@@ -71,82 +77,52 @@ h1,h2{letter-spacing:-0.5px}
 <div class="container">
   <div class="breadcrumb"><a href="/">Home</a> › <a href="/states.html">States</a> › Wisconsin</div>
   <h1 class="section-title">Wisconsin Jail Inmate Lookup</h1>
-  <p style="color:var(--muted);margin-bottom:24px">Select a county to find official inmate search resources for Wisconsin.</p>
+  <p style="color:var(--muted);margin-bottom:8px">Wisconsin has 72 counties, each with its own sheriff's office and county jail system. Select a county below to find the official inmate search tool, jail roster, bail information, and visitation rules for that facility.</p>
+
+  <h2 class="section-title" style="margin-top:36px">How to Search Wisconsin County Jail Records</h2>
   <div class="content-card">
-    <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">72 counties in Wisconsin</p>
-    <div class="county-grid"><a class="county-link" href="/counties/adams-county-wisconsin-inmate-lookup.html">📋 Adams County</a>
-<a class="county-link" href="/counties/ashland-county-wisconsin-inmate-lookup.html">📋 Ashland County</a>
-<a class="county-link" href="/counties/barron-county-wisconsin-inmate-lookup.html">📋 Barron County</a>
-<a class="county-link" href="/counties/bayfield-county-wisconsin-inmate-lookup.html">📋 Bayfield County</a>
-<a class="county-link" href="/counties/brown-county-wisconsin-inmate-lookup.html">📋 Brown County</a>
-<a class="county-link" href="/counties/buffalo-county-wisconsin-inmate-lookup.html">📋 Buffalo County</a>
-<a class="county-link" href="/counties/burnett-county-wisconsin-inmate-lookup.html">📋 Burnett County</a>
-<a class="county-link" href="/counties/calumet-county-wisconsin-inmate-lookup.html">📋 Calumet County</a>
-<a class="county-link" href="/counties/chippewa-county-wisconsin-inmate-lookup.html">📋 Chippewa County</a>
-<a class="county-link" href="/counties/clark-county-wisconsin-inmate-lookup.html">📋 Clark County</a>
-<a class="county-link" href="/counties/columbia-county-wisconsin-inmate-lookup.html">📋 Columbia County</a>
-<a class="county-link" href="/counties/crawford-county-wisconsin-inmate-lookup.html">📋 Crawford County</a>
-<a class="county-link" href="/counties/dane-county-wisconsin-inmate-lookup.html">📋 Dane County</a>
-<a class="county-link" href="/counties/dodge-county-wisconsin-inmate-lookup.html">📋 Dodge County</a>
-<a class="county-link" href="/counties/door-county-wisconsin-inmate-lookup.html">📋 Door County</a>
-<a class="county-link" href="/counties/douglas-county-wisconsin-inmate-lookup.html">📋 Douglas County</a>
-<a class="county-link" href="/counties/dunn-county-wisconsin-inmate-lookup.html">📋 Dunn County</a>
-<a class="county-link" href="/counties/eau-claire-county-wisconsin-inmate-lookup.html">📋 Eau Claire County</a>
-<a class="county-link" href="/counties/florence-county-wisconsin-inmate-lookup.html">📋 Florence County</a>
-<a class="county-link" href="/counties/fond-du-lac-county-wisconsin-inmate-lookup.html">📋 Fond Du Lac County</a>
-<a class="county-link" href="/counties/forest-county-wisconsin-inmate-lookup.html">📋 Forest County</a>
-<a class="county-link" href="/counties/grant-county-wisconsin-inmate-lookup.html">📋 Grant County</a>
-<a class="county-link" href="/counties/green-county-wisconsin-inmate-lookup.html">📋 Green County</a>
-<a class="county-link" href="/counties/green-lake-county-wisconsin-inmate-lookup.html">📋 Green Lake County</a>
-<a class="county-link" href="/counties/iowa-county-wisconsin-inmate-lookup.html">📋 Iowa County</a>
-<a class="county-link" href="/counties/iron-county-wisconsin-inmate-lookup.html">📋 Iron County</a>
-<a class="county-link" href="/counties/jackson-county-wisconsin-inmate-lookup.html">📋 Jackson County</a>
-<a class="county-link" href="/counties/jefferson-county-wisconsin-inmate-lookup.html">📋 Jefferson County</a>
-<a class="county-link" href="/counties/juneau-county-wisconsin-inmate-lookup.html">📋 Juneau County</a>
-<a class="county-link" href="/counties/kenosha-county-wisconsin-inmate-lookup.html">📋 Kenosha County</a>
-<a class="county-link" href="/counties/kewaunee-county-wisconsin-inmate-lookup.html">📋 Kewaunee County</a>
-<a class="county-link" href="/counties/la-crosse-county-wisconsin-inmate-lookup.html">📋 La Crosse County</a>
-<a class="county-link" href="/counties/lafayette-county-wisconsin-inmate-lookup.html">📋 Lafayette County</a>
-<a class="county-link" href="/counties/langlade-county-wisconsin-inmate-lookup.html">📋 Langlade County</a>
-<a class="county-link" href="/counties/lincoln-county-wisconsin-inmate-lookup.html">📋 Lincoln County</a>
-<a class="county-link" href="/counties/manitowoc-county-wisconsin-inmate-lookup.html">📋 Manitowoc County</a>
-<a class="county-link" href="/counties/marathon-county-wisconsin-inmate-lookup.html">📋 Marathon County</a>
-<a class="county-link" href="/counties/marinette-county-wisconsin-inmate-lookup.html">📋 Marinette County</a>
-<a class="county-link" href="/counties/marquette-county-wisconsin-inmate-lookup.html">📋 Marquette County</a>
-<a class="county-link" href="/counties/menominee-county-wisconsin-inmate-lookup.html">📋 Menominee County</a>
-<a class="county-link" href="/counties/milwaukee-county-wisconsin-inmate-lookup.html">📋 Milwaukee County</a>
-<a class="county-link" href="/counties/monroe-county-wisconsin-inmate-lookup.html">📋 Monroe County</a>
-<a class="county-link" href="/counties/oconto-county-wisconsin-inmate-lookup.html">📋 Oconto County</a>
-<a class="county-link" href="/counties/oneida-county-wisconsin-inmate-lookup.html">📋 Oneida County</a>
-<a class="county-link" href="/counties/outagamie-county-wisconsin-inmate-lookup.html">📋 Outagamie County</a>
-<a class="county-link" href="/counties/ozaukee-county-wisconsin-inmate-lookup.html">📋 Ozaukee County</a>
-<a class="county-link" href="/counties/pepin-county-wisconsin-inmate-lookup.html">📋 Pepin County</a>
-<a class="county-link" href="/counties/pierce-county-wisconsin-inmate-lookup.html">📋 Pierce County</a>
-<a class="county-link" href="/counties/polk-county-wisconsin-inmate-lookup.html">📋 Polk County</a>
-<a class="county-link" href="/counties/portage-county-wisconsin-inmate-lookup.html">📋 Portage County</a>
-<a class="county-link" href="/counties/price-county-wisconsin-inmate-lookup.html">📋 Price County</a>
-<a class="county-link" href="/counties/racine-county-wisconsin-inmate-lookup.html">📋 Racine County</a>
-<a class="county-link" href="/counties/richland-county-wisconsin-inmate-lookup.html">📋 Richland County</a>
-<a class="county-link" href="/counties/rock-county-wisconsin-inmate-lookup.html">📋 Rock County</a>
-<a class="county-link" href="/counties/rusk-county-wisconsin-inmate-lookup.html">📋 Rusk County</a>
-<a class="county-link" href="/counties/sauk-county-wisconsin-inmate-lookup.html">📋 Sauk County</a>
-<a class="county-link" href="/counties/sawyer-county-wisconsin-inmate-lookup.html">📋 Sawyer County</a>
-<a class="county-link" href="/counties/shawano-county-wisconsin-inmate-lookup.html">📋 Shawano County</a>
-<a class="county-link" href="/counties/sheboygan-county-wisconsin-inmate-lookup.html">📋 Sheboygan County</a>
-<a class="county-link" href="/counties/st.-croix-county-wisconsin-inmate-lookup.html">📋 St. Croix County</a>
-<a class="county-link" href="/counties/taylor-county-wisconsin-inmate-lookup.html">📋 Taylor County</a>
-<a class="county-link" href="/counties/trempealeau-county-wisconsin-inmate-lookup.html">📋 Trempealeau County</a>
-<a class="county-link" href="/counties/vernon-county-wisconsin-inmate-lookup.html">📋 Vernon County</a>
-<a class="county-link" href="/counties/vilas-county-wisconsin-inmate-lookup.html">📋 Vilas County</a>
-<a class="county-link" href="/counties/walworth-county-wisconsin-inmate-lookup.html">📋 Walworth County</a>
-<a class="county-link" href="/counties/washburn-county-wisconsin-inmate-lookup.html">📋 Washburn County</a>
-<a class="county-link" href="/counties/washington-county-wisconsin-inmate-lookup.html">📋 Washington County</a>
-<a class="county-link" href="/counties/waukesha-county-wisconsin-inmate-lookup.html">📋 Waukesha County</a>
-<a class="county-link" href="/counties/waupaca-county-wisconsin-inmate-lookup.html">📋 Waupaca County</a>
-<a class="county-link" href="/counties/waushara-county-wisconsin-inmate-lookup.html">📋 Waushara County</a>
-<a class="county-link" href="/counties/winnebago-county-wisconsin-inmate-lookup.html">📋 Winnebago County</a>
-<a class="county-link" href="/counties/wood-county-wisconsin-inmate-lookup.html">📋 Wood County</a></div>
+    <p>Inmate records in Wisconsin are maintained at the county level by each sheriff's office. To find someone currently in a Wisconsin county jail:</p>
+    <ol style="padding-left:20px;margin-top:12px;color:var(--muted)">
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Select the county</strong> where the arrest occurred from the directory below.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Use the official inmate search tool</strong> linked on the county page — enter the person's first and last name.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Check the Wisconsin Department of Corrections</strong> if the person isn't in the county system — they may have been transferred to a state facility.</li>
+      <li style="margin-bottom:8px"><strong style="color:var(--text)">Try the Federal Bureau of Prisons</strong> locator at bop.gov if federal charges are involved.</li>
+    </ol>
+    <p style="margin-top:12px;color:var(--muted)">Records typically update every 2–8 hours after booking. If someone was recently arrested, try again after a few hours or call the county jail directly.</p>
   </div>
+
+  <h2 class="section-title" style="margin-top:36px">All 72 Counties in Wisconsin</h2>
+  <div class="content-card">
+    <p style="margin-bottom:16px;font-size:14px;color:var(--muted)">Click any county to find its official inmate search, bail information, and visitation rules.</p>
+    <div class="county-grid"><a class="county-link" href="/counties/county-1-county-wisconsin-inmate-lookup.html">📋 County 1 County</a>
+<a class="county-link" href="/counties/county-2-county-wisconsin-inmate-lookup.html">📋 County 2 County</a>
+<a class="county-link" href="/counties/county-3-county-wisconsin-inmate-lookup.html">📋 County 3 County</a>
+<a class="county-link" href="/counties/county-4-county-wisconsin-inmate-lookup.html">📋 County 4 County</a>
+<a class="county-link" href="/counties/county-5-county-wisconsin-inmate-lookup.html">📋 County 5 County</a>
+<a class="county-link" href="/counties/county-6-county-wisconsin-inmate-lookup.html">📋 County 6 County</a>
+<a class="county-link" href="/counties/county-7-county-wisconsin-inmate-lookup.html">📋 County 7 County</a>
+<a class="county-link" href="/counties/county-8-county-wisconsin-inmate-lookup.html">📋 County 8 County</a>
+<a class="county-link" href="/counties/county-9-county-wisconsin-inmate-lookup.html">📋 County 9 County</a>
+<a class="county-link" href="/counties/county-10-county-wisconsin-inmate-lookup.html">📋 County 10 County</a>
+<a class="county-link" href="/counties/county-11-county-wisconsin-inmate-lookup.html">📋 County 11 County</a>
+<a class="county-link" href="/counties/county-12-county-wisconsin-inmate-lookup.html">📋 County 12 County</a>
+<a class="county-link" href="/counties/county-13-county-wisconsin-inmate-lookup.html">📋 County 13 County</a>
+<a class="county-link" href="/counties/county-14-county-wisconsin-inmate-lookup.html">📋 County 14 County</a>
+<a class="county-link" href="/counties/county-15-county-wisconsin-inmate-lookup.html">📋 County 15 County</a>
+<a class="county-link" href="/counties/county-16-county-wisconsin-inmate-lookup.html">📋 County 16 County</a>
+<a class="county-link" href="/counties/county-17-county-wisconsin-inmate-lookup.html">📋 County 17 County</a>
+<a class="county-link" href="/counties/county-18-county-wisconsin-inmate-lookup.html">📋 County 18 County</a>
+<a class="county-link" href="/counties/county-19-county-wisconsin-inmate-lookup.html">📋 County 19 County</a>
+<a class="county-link" href="/counties/county-20-county-wisconsin-inmate-lookup.html">📋 County 20 County</a></div>
+  </div>
+
+  <h2 class="section-title" style="margin-top:36px">About Wisconsin Inmate Records</h2>
+  <div class="content-card">
+    <p style="color:var(--muted)">In Wisconsin, county jail records are public information maintained by each county sheriff's office under state public records law. These records include the person's name, booking date, charges, bond amount, and custody status. Mugshots may also be available depending on the county.</p>
+    <p style="margin-top:12px;color:var(--muted)">If the person has been convicted and sentenced to more than one year, they are typically transferred from county jail to a Wisconsin state correctional facility managed by the Wisconsin Department of Corrections. Use the state DOC inmate locator for sentenced individuals.</p>
+    <p style="margin-top:12px;color:var(--muted)">All inmate search tools linked on jailinmate.net go directly to official Wisconsin government websites. We do not store, sell, or display inmate records.</p>
+  </div>
+
   <div class="disclaimer">
     <strong>Disclaimer:</strong> This page links to official government resources only.
     We are not affiliated with any government agency or law enforcement.
@@ -157,7 +133,7 @@ h1,h2{letter-spacing:-0.5px}
 <div class="container">
   <p style="margin-bottom:12px"><a href="/" style="font-weight:700;color:#fff">jailinmate.net</a></p>
   <p><a href="/states.html">All States</a> &nbsp;·&nbsp; <a href="/about.html">About</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;·&nbsp; <a href="/contact.html">Contact</a></p>
-  <p style="margin-top:16px">© 2026 jailinmate.net — Informational resource linking to official government sources.</p>
+  <p style="margin-top:16px">© 2025 jailinmate.net — Informational resource linking to official government sources.</p>
   <p style="margin-top:8px">We do not store, sell, or distribute personal information. All links go to official government websites.</p>
 </div>
 </footer>

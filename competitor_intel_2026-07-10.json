@@ -1,0 +1,296 @@
+{
+ "plan_id": 1,
+ "project": "inmate-lookup-site",
+ "goal": "Weekly competitor intelligence for the inmate lookup niche: discover competitors via SERP, tear down their sites (platform, theme, page count), detect monetization (AdSense, Ezoic, Mediavine, affiliates), gather backlink and traffic estimates from free sources, score each competitor, and propose goals for our site based on what works",
+ "generated_at": "2026-07-10T11:07:27.416414+00:00",
+ "report_date": "2026-07-10",
+ "steps": {
+  "1": {
+   "title": "Gather human inputs for competitor discovery",
+   "summary": "manually completed by human (gate approved)",
+   "data": {
+    "gate_id": 7
+   }
+  },
+  "2": {
+   "title": "Discover competitors via SERP scraping",
+   "summary": "Discovered 4 competitor domains via firecrawl across 4 keywords (excluded .gov/.mil rosters and own site).",
+   "data": {
+    "keywords_used": [
+     "inmate search website free",
+     "find inmates online",
+     "jail records lookup",
+     "mugshot lookup"
+    ],
+    "search_provider": "firecrawl",
+    "competitor_count": 4,
+    "competitors": [
+     {
+      "domain": "wcsoga.com",
+      "appearances": 1,
+      "best_position": 4,
+      "sample_url": "https://www.wcsoga.com/inmate-inquiry.cfm",
+      "sample_title": "Inmate Inquiry - Wayne County Sheriff's Offce"
+     },
+     {
+      "domain": "betamcso.org",
+      "appearances": 1,
+      "best_position": 4,
+      "sample_url": "http://betamcso.org/",
+      "sample_title": "Maricopa County Sheriff's Office"
+     },
+     {
+      "domain": "ucnj.org",
+      "appearances": 1,
+      "best_position": 10,
+      "sample_url": "https://ucnj.org/sheriff/corrections/inmate-look-up-disclaimer/",
+      "sample_title": "Inmate Look Up Disclaimer - County of Union, New Jersey"
+     },
+     {
+      "domain": "bustedmugshots.pennsylvaniaofficialrecords.com",
+      "appearances": 1,
+      "best_position": 10,
+      "sample_url": "https://bustedmugshots.pennsylvaniaofficialrecords.com/county/allegheny",
+      "sample_title": "Allegheny County Busted Mugshots - Arrest Lookup"
+     }
+    ]
+   }
+  },
+  "3": {
+   "title": "Scrape and tear down competitor sites",
+   "summary": "Tore down 4 sites (4 reachable): real platform/theme fingerprints + sitemap page counts.",
+   "data": {
+    "teardowns": [
+     {
+      "domain": "wcsoga.com",
+      "reachable": true,
+      "http_status": 200,
+      "platform": null,
+      "theme": null,
+      "generator": null,
+      "signals": [],
+      "sitemap_found": true,
+      "page_count": 53,
+      "page_count_partial": false,
+      "last_updated": "2026-07-06"
+     },
+     {
+      "domain": "betamcso.org",
+      "reachable": true,
+      "http_status": 200,
+      "platform": null,
+      "theme": null,
+      "generator": null,
+      "signals": [],
+      "sitemap_found": false,
+      "page_count": 0,
+      "page_count_partial": false,
+      "last_updated": null
+     },
+     {
+      "domain": "ucnj.org",
+      "reachable": true,
+      "http_status": 200,
+      "platform": "WordPress",
+      "theme": "twentytwenty",
+      "generator": "WordPress 7.0.1",
+      "signals": [
+       "WordPress"
+      ],
+      "sitemap_found": true,
+      "page_count": 87,
+      "page_count_partial": false,
+      "last_updated": "2026-07-09T16:52:13Z"
+     },
+     {
+      "domain": "bustedmugshots.pennsylvaniaofficialrecords.com",
+      "reachable": true,
+      "http_status": 200,
+      "platform": null,
+      "theme": null,
+      "generator": null,
+      "signals": [],
+      "sitemap_found": false,
+      "page_count": 0,
+      "page_count_partial": false,
+      "last_updated": null
+     }
+    ]
+   }
+  },
+  "4": {
+   "title": "Detect monetization signals",
+   "summary": "Checked monetization on 4 sites: 0 show real ad/affiliate signals (AdSense pub-ids, ad networks, affiliate patterns in live HTML).",
+   "data": {
+    "findings": [
+     {
+      "domain": "wcsoga.com",
+      "monetized": false,
+      "adsense_pub_ids": [],
+      "networks": [],
+      "affiliate": [],
+      "other": []
+     },
+     {
+      "domain": "betamcso.org",
+      "monetized": false,
+      "adsense_pub_ids": [],
+      "networks": [],
+      "affiliate": [],
+      "other": []
+     },
+     {
+      "domain": "ucnj.org",
+      "monetized": false,
+      "adsense_pub_ids": [],
+      "networks": [],
+      "affiliate": [],
+      "other": [
+       "newsletter"
+      ]
+     },
+     {
+      "domain": "bustedmugshots.pennsylvaniaofficialrecords.com",
+      "monetized": false,
+      "adsense_pub_ids": [],
+      "networks": [],
+      "affiliate": [],
+      "other": []
+     }
+    ]
+   }
+  },
+  "5": {
+   "title": "Gather backlink and traffic estimates",
+   "summary": "Built traffic/authority proxies for 4 domains from real sitemap footprints (no paid API \u2014 page count + freshness as honest proxy).",
+   "data": {
+    "note": "Proxy only. Real traffic estimates need a paid API \u2014 that's an approval gate.",
+    "proxies": [
+     {
+      "domain": "ucnj.org",
+      "indexable_pages": 87,
+      "page_count_partial": false,
+      "last_updated": "2026-07-09T16:52:13Z",
+      "authority_proxy_score": 8
+     },
+     {
+      "domain": "wcsoga.com",
+      "indexable_pages": 53,
+      "page_count_partial": false,
+      "last_updated": "2026-07-06",
+      "authority_proxy_score": 5
+     },
+     {
+      "domain": "betamcso.org",
+      "indexable_pages": 0,
+      "page_count_partial": false,
+      "last_updated": null,
+      "authority_proxy_score": 0
+     },
+     {
+      "domain": "bustedmugshots.pennsylvaniaofficialrecords.com",
+      "indexable_pages": 0,
+      "page_count_partial": false,
+      "last_updated": null,
+      "authority_proxy_score": 0
+     }
+    ]
+   }
+  },
+  "6": {
+   "title": "Score and rank competitors",
+   "summary": "Scored and ranked 4 competitors based on weighted factors: authority proxy score (proxy for traffic and referring domains), page count, platform sophistication, and monetization diversity. The top competitor, ucnj.org, scored 85, primarily due to its high proxy authority, page count, and WordPress platform.",
+   "data": {
+    "ranked_competitors": [
+     {
+      "domain": "ucnj.org",
+      "score": 85,
+      "rank": 1,
+      "strengths": [
+       "high combined authority proxy score (8)",
+       "high page count (87 pages)",
+       "WordPress platform detected"
+      ],
+      "weaknesses": [
+       "no monetization signals detected"
+      ]
+     },
+     {
+      "domain": "wcsoga.com",
+      "score": 50,
+      "rank": 2,
+      "strengths": [
+       "moderate combined authority proxy score (5)",
+       "moderate page count (53 pages)"
+      ],
+      "weaknesses": [
+       "no monetization signals detected",
+       "platform not detected"
+      ]
+     },
+     {
+      "domain": "betamcso.org",
+      "score": 0,
+      "rank": 3,
+      "strengths": [],
+      "weaknesses": [
+       "zero combined authority proxy score",
+       "zero page count",
+       "no monetization signals detected",
+       "platform not detected"
+      ]
+     },
+     {
+      "domain": "bustedmugshots.pennsylvaniaofficialrecords.com",
+      "score": 0,
+      "rank": 3,
+      "strengths": [],
+      "weaknesses": [
+       "zero combined authority proxy score",
+       "zero page count",
+       "no monetization signals detected",
+       "platform not detected"
+      ]
+     }
+    ]
+   }
+  },
+  "7": {
+   "title": "Generate actionable goals for jailinmate.net",
+   "summary": "Generated three actionable goals for jailinmate.net focusing on content expansion, authority building, and deferred monetization, based on analysis of the top-ranked competitors and the site's AdSense eligibility date.",
+   "data": {
+    "goals": [
+     {
+      "priority": "high",
+      "category": "content",
+      "goal": "Expand the website's content depth, specifically by increasing the number of county-specific or related inmate lookup pages, to compete with top performers.",
+      "rationale": "The top-ranked competitor, ucnj.org, achieved its position partly due to a 'high page count (87 pages)', which is explicitly identified as a strength and contributed to its high score. This indicates that comprehensive content coverage is a key factor for success in this niche. Jailinmate.net's current page count is not available in the inputs, preventing the setting of a direct numerical target."
+     },
+     {
+      "priority": "high",
+      "category": "backlinks",
+      "goal": "Implement strategies to improve jailinmate.net's combined authority proxy score through strategic backlink acquisition and consistent high-quality content production.",
+      "rationale": "The top-ranked competitor, ucnj.org, has a 'high combined authority proxy score (8)', which is explicitly listed as a strength and contributes to its high overall score and rank. This highlights the importance of authority in the inmate lookup niche. Jailinmate.net's current authority proxy score is not available in the inputs, preventing the setting of a direct numerical target."
+     },
+     {
+      "priority": "medium",
+      "category": "monetization",
+      "goal": "Prioritize building traffic and ensuring high content quality, deferring direct monetization efforts until after the AdSense eligibility date.",
+      "rationale": "Jailinmate.net's AdSense eligibility is set for 2026-09-21. Furthermore, no monetization signals were detected for any of the ranked competitors (ucnj.org, wcsoga.com, betamcso.org, bustedmugshots.pennsylvaniaofficialrecords.com), suggesting that early focus on monetization may not be the primary driver for competitive advantage in this niche."
+     }
+    ],
+    "next_review_date": "2026-10-10",
+    "limitations": "Specific numerical targets for content expansion and authority building could not be set due to the absence of jailinmate.net's current page count and authority proxy score in the provided inputs. Technical improvements (speed, sitemap) could not be identified as no comparative data for jailinmate.net's technical status or detailed competitor technical metrics were available in the inputs."
+   }
+  },
+  "8": {
+   "title": "Persist report to project and schedule next run",
+   "summary": "The competitor intelligence report derived from Step 7's output was saved to `projects/inmate-lookup-site/competitor_intel_2026-07-10.json`, its summary appended to `AGENTS.md`, and a proposal for weekly execution of this plan was made.",
+   "data": {
+    "report_path": "projects/inmate-lookup-site/competitor_intel_2026-07-10.json",
+    "summary_appended": true,
+    "schedule_proposed": "every Monday 6am"
+   }
+  }
+ }
+}

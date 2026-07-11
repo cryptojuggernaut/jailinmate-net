@@ -190,3 +190,5 @@ Revenue model: Google AdSense display ads + bail bond affiliate links ($15–50/
 - Output to files only
 - PowerShell syntax
 - No clarifying questions
+
+- 2026-07-10: competitor-intel plan #1 ran — report: `competitor_intel_2026-07-10.json` (8 steps)

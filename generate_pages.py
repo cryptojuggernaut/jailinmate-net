@@ -586,9 +586,9 @@ def run(counties: list, output_dir: Path, delay: float = 0.5, force: bool = Fals
 
         # ── Build all template variables ───────────────────────────────────────
         slug = filename  # relative URL path
-        description = (f"How to do an inmate lookup in {county} County, {state} — "
-                       f"official sheriff search, bail bond info, visitation rules, "
-                       f"and step-by-step guide for {primary_keyword.lower()}.")
+        # Description: 100-165 chars (Google sweet spot). Old template was 199+ chars (-5 meta pts).
+        description = (f"Free {county} County {state} inmate lookup. "
+                       f"Official sheriff records, bail bond info, visitation rules, and booking details.")
         state_abbr_lower = state_abbr.lower()
         real_links = _get_real_links(county, state, state_abbr)
 
@@ -662,17 +662,167 @@ def run(counties: list, output_dir: Path, delay: float = 0.5, force: bool = Fals
     return built
 
 
+def strip_noindex_from_dist(dist_dir: Path) -> int:
+    """
+    Remove <meta name="robots" content="noindex,..."> from all existing HTML pages.
+    County pages were generated with an older template that included noindex.
+    This tag costs -30 technical SEO points and prevents Google indexing.
+    Returns count of files fixed.
+    """
+    import re
+    fixed = 0
+    noindex_pattern = re.compile(
+        r'<meta\s+name=["\']robots["\'][^>]*noindex[^>]*>\s*\n?',
+        re.IGNORECASE
+    )
+    for html_file in dist_dir.rglob('*.html'):
+        try:
+            content = html_file.read_text(encoding='utf-8', errors='ignore')
+            if 'noindex' in content.lower():
+                cleaned = noindex_pattern.sub('', content)
+                if cleaned != content:
+                    html_file.write_text(cleaned, encoding='utf-8')
+                    fixed += 1
+        except Exception as e:
+            print(f"  WARN: could not fix {html_file.name}: {e}")
+    return fixed
+
+
+def fix_county_descriptions(dist_dir: Path) -> int:
+    """
+    Update meta descriptions on all existing county pages to be within 100-165 chars.
+    The old template produced 199+ char descriptions, triggering a -5 meta penalty.
+    Matches pages by filename pattern (contains 'inmate-lookup').
+    Returns count of files fixed.
+    """
+    import re
+    fixed = 0
+    pattern = re.compile(
+        r'(<meta\s+name=["\']description["\']\s+content=["\'])([^"\']*)(["\'])',
+        re.IGNORECASE
+    )
+    for html_file in dist_dir.rglob('*.html'):
+        if 'inmate-lookup' not in html_file.name:
+            continue
+        try:
+            content = html_file.read_text(encoding='utf-8', errors='ignore')
+            m = pattern.search(content)
+            if not m:
+                continue
+            old_desc = m.group(2)
+            if len(old_desc) <= 165:
+                continue  # already fine
+            # Extract county/state from the old description pattern
+            # Old format: "How to do an inmate lookup in {county} County, {state} — ..."
+            county_m = re.match(r'How to do an inmate lookup in (.+?) County, (.+?) —', old_desc)
+            if not county_m:
+                continue
+            county = county_m.group(1)
+            state = county_m.group(2)
+            new_desc = (f"Free {county} County {state} inmate lookup. "
+                        f"Official sheriff records, bail bond info, visitation rules, and booking details.")
+            new_content = pattern.sub(
+                lambda x: x.group(1) + new_desc + x.group(3),
+                content, count=1
+            )
+            # Also update og:description and twitter:description
+            new_content = re.sub(
+                r'(<meta\s+property=["\']og:description["\']\s+content=["\'])[^"\']*(["\'])',
+                lambda x: x.group(1) + new_desc + x.group(2),
+                new_content, flags=re.IGNORECASE
+            )
+            new_content = re.sub(
+                r'(<meta\s+name=["\']twitter:description["\']\s+content=["\'])[^"\']*(["\'])',
+                lambda x: x.group(1) + new_desc + x.group(2),
+                new_content, flags=re.IGNORECASE
+            )
+            html_file.write_text(new_content, encoding='utf-8')
+            fixed += 1
+        except Exception as e:
+            print(f'  WARN {html_file.name}: {e}')
+    return fixed
+
+    """
+    Fix SEO metadata on support pages (about, contact, privacy) that have:
+    - Short titles (<30 chars) costing -10 meta points
+    - Short descriptions (<100 chars) costing -8 meta points
+    - Missing JSON-LD schema costing -60 schema points
+    Returns count of files fixed.
+    """
+    import re
+    fixes = {
+        'about.html': {
+            'title': 'About jailinmate.net — Free County Inmate Lookup Resource',
+            'description': 'jailinmate.net provides free links to official county jail inmate records across all 50 US states and 3,100+ counties. Search any county instantly with no registration required.',
+            'schema': '{"@context":"https://schema.org","@type":"WebSite","name":"jailinmate.net","url":"https://jailinmate.net","description":"Free directory of official county jail inmate lookup resources across all 50 US states."}',
+        },
+        'contact.html': {
+            'title': 'Contact jailinmate.net — Questions About Inmate Lookup',
+            'description': 'Contact jailinmate.net with questions, feedback, or data correction requests. We link only to official government jail record sources across all 3,100+ US counties.',
+            'schema': '{"@context":"https://schema.org","@type":"ContactPage","name":"Contact jailinmate.net","url":"https://jailinmate.net/contact.html"}',
+        },
+        'privacy.html': {
+            'description': 'jailinmate.net privacy policy. We do not store personal data, sell information, or track users beyond standard analytics. All inmate search links go to official government sources.',
+        },
+    }
+    fixed = 0
+    for filename, updates in fixes.items():
+        p = dist_dir / filename
+        if not p.exists():
+            continue
+        try:
+            content = p.read_text(encoding='utf-8', errors='ignore')
+            changed = False
+            if 'title' in updates:
+                new_title = f'<title>{updates["title"]}</title>'
+                content, n = re.subn(r'<title>[^<]*</title>', new_title, content, flags=re.I)
+                if n: changed = True
+            if 'description' in updates:
+                new_desc = f'content="{updates["description"]}"'
+                content, n = re.subn(
+                    r'(<meta[^>]+name=["\']description["\'][^>]+content=)["\'][^"\']*["\']',
+                    lambda m: m.group(1) + '"' + updates['description'] + '"',
+                    content, flags=re.I
+                )
+                if n: changed = True
+            if 'schema' in updates and 'application/ld+json' not in content:
+                schema_tag = f'\n<script type="application/ld+json">\n{updates["schema"]}\n</script>'
+                content = content.replace('</head>', schema_tag + '\n</head>', 1)
+                changed = True
+            if changed:
+                p.write_text(content, encoding='utf-8')
+                fixed += 1
+                print(f'  Fixed: {filename}')
+        except Exception as e:
+            print(f'  WARN: could not fix {filename}: {e}')
+    return fixed
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--all", action="store_true", help="Generate all counties (requires CSV)")
     parser.add_argument("--state", help="Filter by state abbreviation (e.g. TX)")
     parser.add_argument("--count", type=int, default=10, help="Number of counties to generate")
     parser.add_argument("--force", action="store_true", help="Overwrite existing pages (use after template changes)")
+    parser.add_argument("--strip-noindex", action="store_true", help="Remove noindex robots tags from all existing dist pages")
+    parser.add_argument("--fix-support-seo", action="store_true", help="Fix SEO metadata on about/contact/privacy support pages")
+    parser.add_argument("--fix-descriptions", action="store_true", help="Shorten over-long meta descriptions on all county pages (>165 chars -> ~130 chars)")
     args = parser.parse_args()
 
     out = Path(r"C:\WebAutomation\projects\inmate-lookup-site\dist")
 
-    if args.all:
+    if getattr(args, 'strip_noindex', False):
+        print("Stripping noindex from all existing pages...")
+        fixed = strip_noindex_from_dist(out)
+        print(f"Fixed {fixed} pages — noindex removed")
+    elif getattr(args, 'fix_support_seo', False):
+        print("Fixing SEO metadata on support pages...")
+        fixed = fix_support_page_seo(out)
+        print(f"Fixed {fixed} support pages — titles/descriptions/schema updated")
+    elif getattr(args, 'fix_descriptions', False):
+        print("Fixing over-long meta descriptions on county pages...")
+        fixed = fix_county_descriptions(out)
+        print(f"Fixed {fixed} county pages — descriptions trimmed to 100-165 chars")
+    elif args.all:
         # Load from CSV if available
         csv_path = Path(r"C:\WebAutomation\projects\inmate-lookup-site\counties.csv")
         if csv_path.exists():
@@ -688,4 +838,6 @@ if __name__ == "__main__":
         if args.state:
             counties = [c for c in SAMPLE_COUNTIES if c[2] == args.state]
 
-    run(counties, out, force=args.force)
+    if (not getattr(args, 'strip_noindex', False) and not getattr(args, 'fix_support_seo', False)
+            and not getattr(args, 'fix_descriptions', False)):
+        run(counties, out, force=args.force)

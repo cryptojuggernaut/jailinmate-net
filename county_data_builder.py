@@ -117,22 +117,59 @@ def county_key(county: str, state: str) -> str:
     return f"{county}|{state}"
 
 
+def _clean_url(u: str) -> str:
+    """Keep only real http(s) URLs — never Google/Bing search placeholders."""
+    u = (u or "").strip()
+    if not u:
+        return ""
+    low = u.lower()
+    if any(x in low for x in (
+        "google.com/search", "google.com/url", "bing.com/search",
+        "placeholder", "example.com", "your-county",
+    )):
+        return ""
+    if not (low.startswith("http://") or low.startswith("https://")):
+        return ""
+    return u
+
+
 def generate_county_data(model, county: str, state: str) -> dict | None:
+    """Ask Gemini for county jail data; strip doorway/search URLs."""
     abbr = STATE_ABBR.get(state, "")
     prompt = PROMPT.format(county=county, state=state, state_abbr=abbr)
+    # Reinforce no-search-URL rule
+    prompt += (
+        "\n\nCRITICAL: inmate_search_url and sheriff_url must be real government or "
+        "official facility sites (.gov, .us, or known official domains). "
+        "NEVER use google.com/search or any web-search URL. "
+        "If you do not know a real roster URL, use empty string \"\" for inmate_search_url."
+    )
+    raw = ""
     try:
         response = model.generate_content(prompt)
         raw = response.text.strip()
-        # Strip markdown fences if model adds them
         raw = re.sub(r"^```(?:json)?\n?", "", raw)
         raw = re.sub(r"\n?```$", "", raw)
         raw = raw.strip()
         data = json.loads(raw)
-        # Validate required fields
-        required = ["sheriff_name", "inmate_search_url", "jail_name", "jail_address", "jail_phone"]
-        missing = [f for f in required if not data.get(f) or "placeholder" in str(data.get(f, "")).lower()]
+        # Normalize URLs
+        for ukey in ("inmate_search_url", "sheriff_url", "doc_url", "court_url"):
+            if ukey in data:
+                data[ukey] = _clean_url(str(data.get(ukey) or ""))
+        # Required non-URL facts (URLs may be empty if unknown — generator handles honesty)
+        required = ["sheriff_name", "jail_name", "jail_address", "jail_phone"]
+        missing = [
+            f for f in required
+            if not data.get(f) or "placeholder" in str(data.get(f, "")).lower()
+        ]
         if missing:
             print(f"    WARNING: missing/placeholder fields: {missing}")
+            # Still keep if we got at least address OR phone OR a real URL
+            if not (data.get("jail_address") or data.get("jail_phone") or data.get("inmate_search_url") or data.get("sheriff_url")):
+                return None
+        data.setdefault("county", county)
+        data.setdefault("state", state)
+        data.setdefault("state_abbr", abbr)
         return data
     except json.JSONDecodeError as e:
         print(f"    JSON parse error: {e}")

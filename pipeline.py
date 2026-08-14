@@ -35,6 +35,12 @@ def main():
         print("enrich_pages.py failed, stopping.")
         sys.exit(rc)
 
+    # Step 1b: Never deploy Google-search "official" links
+    rc = run([sys.executable, "quality_gate.py"], cwd=base)
+    if rc != 0:
+        print("\n[pipeline] BLOCKED: quality_gate failed (google.com/search in county pages).")
+        sys.exit(rc)
+
     # Step 2: Deploy to Cloudflare Pages
     env = os.environ.copy()
     env["CLOUDFLARE_API_TOKEN"]  = env.get("CLOUDFLARE_API_TOKEN", "")

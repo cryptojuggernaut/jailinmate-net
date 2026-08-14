@@ -247,6 +247,8 @@ def _validate_body(content: str, county: str, real_links: dict) -> list[str]:
     # Must not be too short (template fallback is ~1800 chars; AI should exceed that)
     if len(content) < 1200:
         issues.append(f"content too short ({len(content)} chars)")
+    if "google.com/search" in content.lower() or "google.com/url" in content.lower():
+        issues.append("contains google search URL (forbidden)")
     # Must not start with a code fence leftover
     if content.lstrip().startswith("html"):
         issues.append("starts with 'html' (markdown fence artifact)")
@@ -261,7 +263,7 @@ def generate_page_content(county: str, state: str, state_abbr: str,
     key = os.environ.get("ANTHROPIC_API_KEY", "")
     real_links = _get_real_links(county, state, state_abbr)
 
-    if not key:
+    if not key or os.environ.get("SCE_INMATE_TEMPLATE_ONLY") == "1":
         return _template_fallback(county, state, state_abbr, real_links, primary_keyword)
 
     try:
@@ -289,7 +291,9 @@ RULES:
 - Intro paragraph: 2-3 sentences, naturally include "{primary_keyword.lower()}"
 - Total: 800-900 words (each section needs enough detail to be useful)
 - Use only semantic HTML (h1, h2, h3, p, ul, ol, li, strong, a). NO href="#". NO markdown. NO code blocks.
-- Link text must be descriptive (no "click here")"""
+- Link text must be descriptive (no "click here")
+- NEVER use google.com/search, bing.com/search, or any web-search URL. Only the resource links provided above (or plain text if no URL).
+- Do not label a link "official" unless it is one of the provided government/facility URLs."""
 
         api_kwargs = dict(
             model="claude-haiku-4-5",
@@ -319,18 +323,17 @@ RULES:
 
 
 def _get_real_links(county: str, state: str, state_abbr: str) -> dict:
-    """Return real working URLs for a given county.
-    Uses county_data.json (real .gov URLs) when available,
-    falls back to state DOC + Google search for uncovered counties.
+    """Return official resource links for a county.
+
+    NEVER emits google.com/search (or any Google search URL) as an "official" link.
+    Missing roster URLs → honest text guidance + state DOC + BOP only.
     """
     county_slug = county.lower().replace(" ", "-")
     state_slug = state.lower().replace(" ", "-")
     state_lower = state_abbr.lower()
 
-    # Federal Bureau of Prisons locator — always works
     fbop = "https://www.bop.gov/inmateloc/"
 
-    # State DOC URLs — real links for all 50 states
     state_doc_urls = {
         "AL": "https://www.doc.state.al.us/", "AK": "https://doc.alaska.gov/",
         "AZ": "https://corrections.az.gov/", "AR": "https://doc.arkansas.gov/",
@@ -359,94 +362,126 @@ def _get_real_links(county: str, state: str, state_abbr: str) -> dict:
         "WV": "https://dcr.wv.gov/", "WI": "https://doc.wi.gov/",
         "WY": "https://corrections.wyo.gov/", "DC": "https://doc.dc.gov/",
     }
-    doc_url = state_doc_urls.get(state_abbr, f"https://www.google.com/search?q={state_slug}+department+of+corrections")
+    doc_url = state_doc_urls.get(state_abbr, "")
 
-    # --- Check for real county data first ---
+    def _clean_url(u: str) -> str:
+        u = (u or "").strip()
+        if not u:
+            return ""
+        low = u.lower()
+        if "google.com/search" in low or "google.com/url" in low or "bing.com/search" in low:
+            return ""
+        if not (low.startswith("http://") or low.startswith("https://")):
+            return ""
+        return u
+
     data_key = f"{county}|{state}"
-    cd = _COUNTY_DATA.get(data_key)
-    if cd:
-        inmate_search = cd["inmate_search_url"]
-        sheriff_site  = cd["sheriff_url"]
-        court_url     = cd.get("court_url", f"https://www.google.com/search?q={county_slug}+county+{state_lower}+court+records")
-        bond_search   = f"https://www.google.com/search?q={county_slug}+county+{state_lower}+bail+bonds"
-        links_html = (
-            f'  <li><a href="{inmate_search}">{county} County Official Inmate Search</a></li>\n'
-            f'  <li><a href="{sheriff_site}">{cd["sheriff_name"]}</a></li>\n'
-            f'  <li><a href="{doc_url}">{state} Department of Corrections Inmate Locator</a></li>\n'
-            f'  <li><a href="{court_url}">{county} County Court Records</a></li>\n'
-            f'  <li><a href="{fbop}">Federal Bureau of Prisons Inmate Locator</a></li>\n'
-            f'  <li><a href="{bond_search}">{county} County Bail Bond Information</a></li>'
-        )
-        return {
-            "sheriff_search":  inmate_search,
-            "sheriff_site":    sheriff_site,
-            "doc_url":         doc_url,
-            "fbop":            fbop,
-            "court_search":    court_url,
-            "bond_search":     bond_search,
-            "links_html":      links_html,
-            "has_real_data":   True,
-            "jail_name":       cd.get("jail_name", f"{county} County Jail"),
-            "jail_address":    cd.get("jail_address", ""),
-            "jail_phone":      cd.get("jail_phone", ""),
-            "sheriff_name":    cd.get("sheriff_name", f"{county} County Sheriff's Office"),
-        }
+    cd = _COUNTY_DATA.get(data_key) or {}
+    inmate_search = _clean_url(cd.get("inmate_search_url", ""))
+    sheriff_site = _clean_url(cd.get("sheriff_url", ""))
+    court_url = _clean_url(cd.get("court_url", ""))
+    jail_name = cd.get("jail_name") or f"{county} County Jail"
+    jail_address = cd.get("jail_address") or ""
+    jail_phone = cd.get("jail_phone") or ""
+    sheriff_name = cd.get("sheriff_name") or f"{county} County Sheriff's Office"
+    has_real = bool(inmate_search or sheriff_site or jail_address or jail_phone)
 
-    # --- Fallback for counties not yet in county_data.json ---
-    sheriff_search = f"https://www.google.com/search?q={county_slug}+county+{state_lower}+sheriff+inmate+search"
-    court_search   = f"https://www.google.com/search?q={county_slug}+county+{state_lower}+court+records"
-    bond_search    = f"https://www.google.com/search?q={county_slug}+county+{state_lower}+bail+bonds"
-    links_html = (
-        f'  <li><a href="{sheriff_search}">{county} County Sheriff\'s Office — Inmate Search</a></li>\n'
-        f'  <li><a href="{doc_url}">{state} Department of Corrections Inmate Locator</a></li>\n'
-        f'  <li><a href="{court_search}">{county} County Court Records</a></li>\n'
-        f'  <li><a href="{fbop}">Federal Bureau of Prisons Inmate Locator</a></li>\n'
-        f'  <li><a href="{bond_search}">{county} County Bail Bond Information</a></li>'
-    )
+    items = []
+    if inmate_search:
+        items.append(
+            f'  <li><a href="{inmate_search}">{county} County official inmate roster / search</a></li>'
+        )
+    if sheriff_site:
+        items.append(f'  <li><a href="{sheriff_site}">{sheriff_name}</a></li>')
+    if doc_url:
+        items.append(
+            f'  <li><a href="{doc_url}">{state} Department of Corrections</a></li>'
+        )
+    items.append(f'  <li><a href="{fbop}">Federal Bureau of Prisons inmate locator</a></li>')
+    if court_url:
+        items.append(f'  <li><a href="{court_url}">{county} County court records</a></li>')
+    if not inmate_search:
+        items.append(
+            f"  <li><strong>County roster online:</strong> No verified public inmate-search URL "
+            f"on file for {county} County. Call the {sheriff_name}"
+            + (f" at {jail_phone}" if jail_phone else "")
+            + " or check the state DOC link above. "
+            "We do not link to third-party web search results as “official” sources.</li>"
+        )
+
+    links_html = "\n".join(items)
+
+    # Primary CTA: real roster, else sheriff site, else DOC, else empty (template uses text)
+    primary = inmate_search or sheriff_site or doc_url or ""
+
     return {
-        "sheriff_search":  sheriff_search,
-        "sheriff_site":    "",
-        "doc_url":         doc_url,
-        "fbop":            fbop,
-        "court_search":    court_search,
-        "bond_search":     bond_search,
-        "links_html":      links_html,
-        "has_real_data":   False,
-        "jail_name":       f"{county} County Jail",
-        "jail_address":    "",
-        "jail_phone":      "",
-        "sheriff_name":    f"{county} County Sheriff's Office",
+        "sheriff_search": primary,
+        "inmate_search": inmate_search,
+        "sheriff_site": sheriff_site,
+        "doc_url": doc_url,
+        "fbop": fbop,
+        "court_search": court_url,
+        "bond_search": "",
+        "links_html": links_html,
+        "has_real_data": has_real,
+        "has_roster_url": bool(inmate_search),
+        "jail_name": jail_name,
+        "jail_address": jail_address,
+        "jail_phone": jail_phone,
+        "sheriff_name": sheriff_name,
+        "county_slug": county_slug,
+        "state_slug": state_slug,
+        "state_lower": state_lower,
     }
 
 
+def _safe_href(url: str, label: str) -> str:
+    """Anchor if URL present; plain text label otherwise. Never Google."""
+    url = (url or "").strip()
+    if url and "google.com/search" not in url.lower():
+        return f'<a href="{url}">{label}</a>'
+    return f"<strong>{label}</strong>"
+
 
 def _county_info_card(county: str, state: str, real_links: dict) -> str:
-    """Generate a county-specific info card with real jail data if available."""
-    if not real_links.get("has_real_data"):
-        return ""
+    """County-specific info card with real jail data when available."""
     addr = real_links.get("jail_address", "")
     phone = real_links.get("jail_phone", "")
     jail_name = real_links.get("jail_name", f"{county} County Jail")
-    inmate_url = real_links.get("sheriff_search", "")
-    card_lines = [f'<div class="county-info-card">',
-                  f'<h2>{jail_name} — Quick Facts</h2>',
-                  f'<ul>']
+    inmate_url = real_links.get("inmate_search") or ""
+    sheriff_site = real_links.get("sheriff_site") or ""
+    if not (addr or phone or inmate_url or sheriff_site or real_links.get("has_real_data")):
+        return ""
+    card_lines = [
+        f'<div class="county-info-card">',
+        f"<h2>{jail_name} — Quick Facts</h2>",
+        f"<ul>",
+    ]
     if addr:
-        card_lines.append(f'<li><strong>Address:</strong> {addr}</li>')
+        card_lines.append(f"<li><strong>Address:</strong> {addr}</li>")
     if phone:
-        card_lines.append(f'<li><strong>Phone:</strong> {phone}</li>')
+        card_lines.append(f"<li><strong>Phone:</strong> {phone}</li>")
     if inmate_url:
-        card_lines.append(f'<li><strong>Official inmate search:</strong> <a href="{inmate_url}">{county} County Inmate Lookup</a></li>')
-    card_lines += ['<li><strong>Booking records update:</strong> Every 2–8 hours after arrest</li>',
-                   '<li><strong>Visitation:</strong> Contact facility directly for current hours and rules</li>',
-                   '</ul>', '</div>']
+        card_lines.append(
+            f'<li><strong>Official inmate search:</strong> <a href="{inmate_url}">{county} County roster</a></li>'
+        )
+    elif sheriff_site:
+        card_lines.append(
+            f'<li><strong>Sheriff office:</strong> <a href="{sheriff_site}">{real_links.get("sheriff_name")}</a></li>'
+        )
+    card_lines += [
+        "<li><strong>Booking records:</strong> Often lag 2–8 hours after arrest — call the facility if urgent</li>",
+        "<li><strong>Visitation:</strong> Confirm hours and rules with the facility before you go</li>",
+        "</ul>",
+        "</div>",
+    ]
     return "\n".join(card_lines)
 
 
 def _template_fallback(county: str, state: str, state_abbr: str,
                        real_links: dict = None,
                        primary_keyword: str = None) -> str:
-    """Template-based fallback when AI is unavailable."""
+    """Template-based page body — never uses Google Search as official links."""
     if real_links is None:
         real_links = _get_real_links(county, state, state_abbr)
     if primary_keyword is None:
@@ -455,22 +490,63 @@ def _template_fallback(county: str, state: str, state_abbr: str,
     addr = real_links.get("jail_address", "")
     phone = real_links.get("jail_phone", "")
     jail_name = real_links.get("jail_name", f"{county} County Jail")
-    # FAQ answers use real data when available
-    phone_answer = f" You can also call {phone} to speak with a deputy." if phone else ""
+    sheriff_name = real_links.get("sheriff_name", f"{county} County Sheriff's Office")
+    phone_answer = f" You can also call {phone} to speak with staff." if phone else ""
     addr_answer = f" The main facility is located at {addr}." if addr else ""
+
+    roster = real_links.get("inmate_search") or ""
+    primary = real_links.get("sheriff_search") or ""
+    doc_url = real_links.get("doc_url") or ""
+    fbop = real_links.get("fbop") or "https://www.bop.gov/inmateloc/"
+    court = real_links.get("court_search") or ""
+
+    if roster:
+        step1 = f'<li>Open the {_safe_href(roster, f"{county} County official inmate roster")}</li>'
+        how_find = (
+            f"<p>Use the {_safe_href(roster, f'official {county} County inmate roster')} "
+            f"or call the jail directly.{phone_answer} Records often lag 2–8 hours after booking.</p>"
+        )
+        contact_roster = f"<li>{_safe_href(roster, f'{county} County inmate roster')}</li>"
+    else:
+        step1 = (
+            f"<li>Contact the {sheriff_name}"
+            + (f" at {phone}" if phone else "")
+            + " and ask for the current inmate / booking desk process "
+            "(many counties do not publish a public web roster)</li>"
+        )
+        how_find = (
+            f"<p>There is no verified public online roster URL on file for {county} County. "
+            f"Call the {sheriff_name}"
+            + (f" at {phone}" if phone else "")
+            + f" or use the {_safe_href(doc_url, f'{state} Department of Corrections')} site "
+            f"for state custody. We do not treat web search results as official jail records.</p>"
+        )
+        contact_roster = f"<li>{sheriff_name} — call the facility for booking status</li>"
+
+    court_line = ""
+    if court:
+        court_line = (
+            f'<p>For hearing schedules, contact the {_safe_href(court, f"{county} County court")}.</p>'
+        )
+    else:
+        court_line = (
+            f"<p>For hearing schedules, contact the {county} County clerk of court or "
+            f"{sheriff_name} for the correct court division.</p>"
+        )
+
     return f"""<h1>{primary_keyword}</h1>
 {info_card}
-<p>Looking for someone in {county} County, {state}? This guide walks you through how to search
-official {county} County jail records, find current inmates, contact the facility, and understand
-the booking and bail process in {county} County, {state}.</p>
+<p>Looking for someone in {county} County, {state}? This guide explains how to check
+{county} County jail records, contact the facility, and understand booking and bail
+in {county} County, {state} — using official government sources when available.</p>
 
 <h2>How to Search {county} County Jail Records</h2>
 <ol>
-  <li>Click the <a href="{real_links['sheriff_search']}">{county} County Sheriff's Office inmate search</a> link below</li>
-  <li>Enter the person's first and last name — try partial names if full name returns no results</li>
-  <li>Review results — records show booking date, charges, mugshot, and bond amount</li>
-  <li>Note the booking number if you need to contact the facility directly</li>
-  <li>Records update every 2–8 hours after booking; call the jail if the person doesn't appear yet</li>
+  {step1}
+  <li>Provide the person's full name; try alternate spellings if needed</li>
+  <li>Review booking date, charges, and bond information when published</li>
+  <li>Note any booking number before calling the facility</li>
+  <li>If nothing appears yet, wait for the next update cycle or call the jail</li>
 </ol>
 
 <h2>Official {county} County Resources</h2>
@@ -479,66 +555,61 @@ the booking and bail process in {county} County, {state}.</p>
 </ul>
 
 <h2>Bail Bond Information for {county} County</h2>
-<p>After a person is booked into {county} County jail, a judge sets a bail amount at the arraignment
-hearing — usually within 24–72 hours. To secure release before trial, most families work with a
-licensed bail bondsman. Standard bail bonds in {county} County cost <strong>10% of the total bail</strong>
-set by the court (non-refundable fee). For example, a $10,000 bail requires a $1,000 premium.</p>
-<p>If the person cannot afford bail, they may request a bail reduction hearing or apply for a
-public defender. Contact the <a href="{real_links['court_search']}">{county} County court</a> for
-hearing schedules.</p>
+<p>After booking into {county} County jail, a judge typically sets bail at arraignment
+(often within 24–72 hours). Families often work with a licensed bail bondsman. A common
+commercial bond fee is about <strong>10% of the bail amount</strong> (non-refundable).
+Example: $10,000 bail → roughly $1,000 premium, subject to local rules.</p>
+<p>If the person cannot afford bail, they may request a reduction hearing or public defender.
+{court_line}</p>
 
 <h2>Visitation Rules at {county} County Jail</h2>
-<p>Visitation policies vary by facility. Before visiting someone at {county} County jail, confirm:</p>
+<p>Policies vary. Before visiting {jail_name}, confirm:</p>
 <ul>
-  <li><strong>Approved ID:</strong> Government-issued photo ID required for all visitors</li>
-  <li><strong>Visitation hours:</strong> Call the {county} County Sheriff's Office for current schedules</li>
-  <li><strong>Dress code:</strong> No clothing resembling inmate uniforms; some facilities restrict colors</li>
-  <li><strong>Video visitation:</strong> Many {county} County facilities offer remote video visits — ask when you call</li>
-  <li><strong>Children:</strong> Minors must be accompanied by an adult guardian</li>
+  <li><strong>Approved ID:</strong> Government-issued photo ID</li>
+  <li><strong>Hours:</strong> Call {sheriff_name} for the current schedule</li>
+  <li><strong>Dress code:</strong> Facilities restrict clothing that resembles uniforms</li>
+  <li><strong>Video visits:</strong> Many jails offer remote options — ask when you call</li>
+  <li><strong>Children:</strong> Minors usually need an accompanying adult</li>
 </ul>
 
 <h2>What to Expect After Arrest in {county} County</h2>
-<p>When someone is arrested in {county} County, they go through a standard booking process:</p>
+<p>Typical steps after arrest in {county} County:</p>
 <ol>
-  <li><strong>Booking</strong> — fingerprints, photo (mugshot), personal property inventory</li>
-  <li><strong>Medical screening</strong> — required by {state} law before placing in general population</li>
-  <li><strong>Classification</strong> — determines housing assignment based on charges and history</li>
-  <li><strong>Arraignment</strong> — first court appearance within 48–72 hours; bail is set here</li>
-  <li><strong>Transfer</strong> — serious charges may result in transfer to a state facility</li>
+  <li><strong>Booking</strong> — fingerprints, photo, property inventory</li>
+  <li><strong>Medical screening</strong> — before general population housing</li>
+  <li><strong>Classification</strong> — housing based on charges and history</li>
+  <li><strong>Arraignment</strong> — first court appearance; bail often set here</li>
+  <li><strong>Transfer</strong> — serious cases may move to a state facility</li>
 </ol>
 
 <h2>How to Contact {county} County Jail</h2>
-<p>For questions about an inmate's status, bail, visitation, or medical needs, contact the
-{county} County Sheriff's Office directly. You can also search:</p>
+<p>For status, bail, visitation, or medical questions, contact {sheriff_name} directly.</p>
 <ul>
-  <li><a href="{real_links['sheriff_search']}">{county} County Sheriff inmate search</a></li>
-  <li><a href="{real_links['doc_url']}">{state} Department of Corrections — state prison locator</a></li>
-  <li><a href="{real_links['fbop']}">Federal Bureau of Prisons — federal inmate locator</a></li>
+  {contact_roster}
+  <li>{_safe_href(doc_url, f"{state} Department of Corrections")}</li>
+  <li>{_safe_href(fbop, "Federal Bureau of Prisons locator")}</li>
 </ul>
 
 <h2>Frequently Asked Questions — {county} County Inmate Lookup</h2>
 
 <h3>How do I find out if someone is in {county} County jail?</h3>
-<p>Use the <a href="{real_links['sheriff_search']}">official {county} County inmate search portal</a>
-or call the jail directly.{phone_answer} Records update every 2–8 hours after booking.</p>
+{how_find}
 
 <h3>How long does booking take in {county} County?</h3>
-<p>Booking typically takes 2–8 hours depending on the facility's current volume. During weekends
-and holidays it may take longer before a record appears in the online search system.</p>
+<p>Booking often takes 2–8 hours depending on volume. Weekends and holidays can delay
+when a name appears in any published system.</p>
 
 <h3>Can I visit an inmate at {county} County jail?</h3>
-<p>Yes.{addr_answer} Contact the {jail_name} for current visitation hours, approved ID
-requirements, and dress code rules. Many facilities now offer video visitation as an alternative.</p>
+<p>Usually yes if the facility allows visits and the person is eligible.{addr_answer}
+Contact {jail_name} for hours, ID rules, and dress code. Video visitation may be available.</p>
 
 <h3>What if the person is not in the county jail system?</h3>
-<p>They may have been transferred to a state facility — check the <a href="{real_links['doc_url']}">{state}
-Department of Corrections inmate locator</a>. For federal charges, use the
-<a href="{real_links['fbop']}">Federal Bureau of Prisons locator</a>.</p>
+<p>They may be in state custody — check the {_safe_href(doc_url, f"{state} DOC")}.
+For federal charges use the {_safe_href(fbop, "BOP inmate locator")}.</p>
 
 <h3>How do I send money to an inmate in {county} County?</h3>
-<p>Most {county} County facilities use a third-party commissary service (such as JPay, Securus, or
-Access Corrections). Contact the jail directly to find out which service they use and any deposit limits.</p>"""
-
+<p>Most facilities use a commissary vendor (for example JPay, Securus, or Access Corrections).
+Confirm the vendor and limits with {jail_name} before sending funds.</p>"""
 
 
 
@@ -803,12 +874,13 @@ if __name__ == "__main__":
     parser.add_argument("--state", help="Filter by state abbreviation (e.g. TX)")
     parser.add_argument("--count", type=int, default=10, help="Number of counties to generate")
     parser.add_argument("--force", action="store_true", help="Overwrite existing pages (use after template changes)")
+    parser.add_argument("--template-only", action="store_true", help="Skip AI; use template body only (bulk regen)")
     parser.add_argument("--strip-noindex", action="store_true", help="Remove noindex robots tags from all existing dist pages")
     parser.add_argument("--fix-support-seo", action="store_true", help="Fix SEO metadata on about/contact/privacy support pages")
     parser.add_argument("--fix-descriptions", action="store_true", help="Shorten over-long meta descriptions on all county pages (>165 chars -> ~130 chars)")
     args = parser.parse_args()
 
-    out = Path(r"C:\WebAutomation\projects\inmate-lookup-site\dist")
+    out = Path(__file__).resolve().parent / "dist"
 
     if getattr(args, 'strip_noindex', False):
         print("Stripping noindex from all existing pages...")
@@ -824,7 +896,7 @@ if __name__ == "__main__":
         print(f"Fixed {fixed} county pages — descriptions trimmed to 100-165 chars")
     elif args.all:
         # Load from CSV if available
-        csv_path = Path(r"C:\WebAutomation\projects\inmate-lookup-site\counties.csv")
+        csv_path = Path(__file__).resolve().parent / "counties.csv"
         if csv_path.exists():
             import csv
             with open(csv_path, encoding="utf-8-sig") as f:
@@ -840,4 +912,8 @@ if __name__ == "__main__":
 
     if (not getattr(args, 'strip_noindex', False) and not getattr(args, 'fix_support_seo', False)
             and not getattr(args, 'fix_descriptions', False)):
-        run(counties, out, force=args.force)
+        if getattr(args, 'template_only', False):
+            os.environ["SCE_INMATE_TEMPLATE_ONLY"] = "1"
+            run(counties, out, force=args.force, delay=0.0)
+        else:
+            run(counties, out, force=args.force)

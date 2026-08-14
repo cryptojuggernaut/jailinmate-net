@@ -1,3 +1,17 @@
+
+---
+## Status update 2026-08-14 (quality B ship)
+
+- **DONE:** Generator no longer emits `google.com/search` as official links.
+- **DONE:** Full regen of **3100** county pages; `quality_gate.py` = **PASS** (0 google search URLs).
+- **DONE:** Gate wired into `build_site.py` + `pipeline.py` + daily SCE task `inmate_quality_gate`.
+- **DONE:** Deployed to Cloudflare Pages (jailinmate-net).
+- **PARTIAL:** Only ~70 counties have verified roster URLs in `county_data.json`; rest use honest "no public roster URL" + state DOC/BOP (not Google).
+- **STILL OPEN:** Unique data fill for long tail; AdSense apply only after ~2026-09-21 + human gate.
+- **NEVER AGAIN:** Deploy blocked if google/bing search URLs reappear in `dist/counties`.
+
+---
+
 # AdSense Rejection — Root Cause & Fix Plan
 
 **Status:** BLOCKED until content quality fixes are complete.

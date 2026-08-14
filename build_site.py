@@ -510,5 +510,18 @@ def build_all():
 
 if __name__ == "__main__":
     build_all()
+    try:
+        from quality_gate import scan
+        r = scan()
+        print(f"quality_gate: pages={r['pages']} google_search={r['google_search_count']} ok={r['ok']}")
+        if not r["ok"]:
+            print("QUALITY GATE FAILED — fix county pages before deploy", file=sys.stderr)
+            sys.exit(1)
+    except SystemExit:
+        raise
+    except Exception as e:
+        print(f"quality_gate error: {e}", file=sys.stderr)
+        sys.exit(1)
+
 
 
